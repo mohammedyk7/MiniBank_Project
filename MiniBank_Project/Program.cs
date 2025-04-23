@@ -256,7 +256,7 @@
                 Console.WriteLine(Console.ReadLine());
 
             }
-            static void ProcessRequests()//process requests
+            static void ProcessRequests() // Process account opening requests
             {
                 // Check if there are any requests in the queue
                 if (RequestAccountOpeningQueue.Count > 0)
@@ -264,10 +264,13 @@
                     // Dequeue the first request and process it
                     string request = RequestAccountOpeningQueue.Dequeue();
                     Console.WriteLine("Processing request: " + request);
+
                     // Here you can add code to create an account based on the request
+                    // For example, parse the request details and generate a new account
                 }
                 else
                 {
+                    // If no requests are present, display a message
                     Console.WriteLine("No requests to process.");
                 }
             }

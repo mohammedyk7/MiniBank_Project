@@ -29,6 +29,7 @@
                 bool enteringmenu = true;
                 while (enteringmenu)
                 {
+                    Console.Clear();
                     Console.WriteLine("Welcome to Mini Bank");
                     Console.WriteLine("1. Create Account");
                     Console.WriteLine("2. Deposit Money");

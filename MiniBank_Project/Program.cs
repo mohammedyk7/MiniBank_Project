@@ -12,7 +12,13 @@
             Console.WriteLine("0. EXIT");
             Console.WriteLine("SELECT OPTION :");
             string choice = Console.ReadLine();
+            switch (choice) 
+            {
+                case "1": UserMenu(); break;
+                case "2": AdminMenu(); break;
+                case "0":
 
+            }
         }
 
         static void UserMenu()

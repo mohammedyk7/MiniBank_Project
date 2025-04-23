@@ -17,6 +17,8 @@
 
         static void Main()
         {
+            SaveAccountsinformationfile();
+            // Load account information from the file
             bool processing = true;
             while (processing)
             {

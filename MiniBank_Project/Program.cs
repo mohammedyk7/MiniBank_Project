@@ -97,7 +97,7 @@
                 string? name = Console.ReadLine();
                 Console.WriteLine("National ID ");
                 string? nationalID = Console.ReadLine();
-                RequestAccountOpeningQueue.Enqueue(name + " " + nationalID); // Fixed method name and used the renamed queue
+                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID); // Fixed method name and used the renamed queue
             }
 
             static void Deposit()

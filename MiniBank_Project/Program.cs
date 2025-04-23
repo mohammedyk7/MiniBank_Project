@@ -50,10 +50,20 @@
         }
         static void AdminMenu()
         {
+            bool insertadmin = true;
             Console.WriteLine("Welcome to Mini Bank Admin");
-            Console.WriteLine("1. View All Accounts");
-            Console.WriteLine("2. Delete Account");
-            Console.WriteLine("3. Exit");
+            Console.WriteLine("1. review requests");
+            Console.WriteLine("2. view accounts ");
+            Console.WriteLine("3. view reviews ");
+            Console.WriteLine("0. exit");
+            string? choice = Console.ReadLine();
+            switch (choice)
+            {
+                case "1": ReviewRequest(); break;
+                case "2": ViewAccounts(); break;
+                case "3": ViewReviews(); break;
+                case "0": insertadmin = false; break;// so that the user can go back to the main menu
+            }
         }
         static void RequestAccountOpening() 
         {

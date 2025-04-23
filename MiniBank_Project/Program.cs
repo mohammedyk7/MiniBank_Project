@@ -1,7 +1,16 @@
 ﻿namespace MiniBank_Project
 {
     internal class Program
+        
     {
+        //constants
+        const double MINIMUM_BALANCE = 100.0;
+        const string accountsFilePath = "accounts.txt";
+        const string reviewsFilePath = "reviews.txt";
+        // global list
+        static List<int> accountnumbers = new List<int>();
+        static List<string> accountnames = new List<string>();
+        static List<double> accountbalances = new List<double>();
         static void Main()
         {
             bool processing = true;
@@ -65,7 +74,7 @@
                     Console.WriteLine("4. process requests");
                     Console.WriteLine("0. exit");
                     Console.Write("SELECT OPTION :");
-                    string choice = Console.ReadLine();
+                    string? choice = Console.ReadLine();
                     switch (choice)
                     {
                         case "1": ReviewRequest(); break;

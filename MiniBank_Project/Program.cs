@@ -117,7 +117,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("wrong account number inserted ...");
+                    Console.WriteLine("wrong account number inserted ..."); //if false ...
                 }
 
             }

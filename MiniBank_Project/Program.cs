@@ -108,8 +108,11 @@
                 {
                     Console.WriteLine("enter the amount you want to deposit :");
                     double depositamount = Convert.ToDouble(Console.ReadLine());
+                    // Find the index of the account number in the list
                     int index = accountnumbers.IndexOf(accountnumber);
+                    // Add the deposit amount to the account balance at the found index
                     accountbalances[index] += depositamount;
+                    // Display a success message with the updated balance
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }
                 else

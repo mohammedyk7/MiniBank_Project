@@ -21,7 +21,7 @@
                     case "0": processing = false; break; // so that the user can exit the program
                     default: Console.WriteLine("Invalid choice, please try again."); break; // i have to avoid the infinite loop run:)
                 }
-                Console.WriteLine("Thank you for using our service. Goodbye!");
+                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
             }
 
             static void UserMenu()

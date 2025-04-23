@@ -2,21 +2,22 @@
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             bool processing = true;
             while(processing)
-            Console.WriteLine("=========================WELCOME TO CODELINE-$AFE-BANK =============================");
+            Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
             Console.WriteLine("1. USERMENU ");
             Console.WriteLine("2. ADMINMENU ");
             Console.WriteLine("0. EXIT");
             Console.WriteLine("SELECT OPTION :");
-            string? choice = Console.ReadLine();
+            string choice = Console.ReadLine();
             switch (choice) 
             {
                 case "1": UserMenu(); break;
                 case "2": AdminMenu(); break;
                 case "0": processing = false; break;// so that the user can exit the program
+                default: Console.WriteLine("Invalid choice, please try again."); break;//i have to avoid the infinite loop run:)
 
             }
         }
@@ -32,7 +33,7 @@
             Console.WriteLine("4. Check Balance");
             Console.WriteLine("5. submit rebiew");
             Console.WriteLine("0. back to mainmenu");
-            string? choice = Console.ReadLine();
+            string choice = Console.ReadLine();
             switch (choice)
             {
                 case "1": RequestAccountOpening(); break;
@@ -51,12 +52,13 @@
         static void AdminMenu()
         {
             bool insertadmin = true;
-            Console.WriteLine("Welcome to Mini Bank Admin");
+            while(insertadmin)
+                Console.WriteLine("Welcome to Mini Bank Admin");
             Console.WriteLine("1. review requests");
             Console.WriteLine("2. view accounts ");
             Console.WriteLine("3. view reviews ");
             Console.WriteLine("0. exit");
-            string? choice = Console.ReadLine();
+            string choice = Console.ReadLine();
             switch (choice)
             {
                 case "1": ReviewRequest(); break;

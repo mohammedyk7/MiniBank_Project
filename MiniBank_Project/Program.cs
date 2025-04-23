@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            bool processing = true
+            bool processing = true;
             while(processing)
             Console.WriteLine("=========================WELCOME TO CODELINE-$AFE-BANK =============================");
             Console.WriteLine("1. USERMENU ");
@@ -24,8 +24,10 @@
             Console.WriteLine("4. Check Balance");
             Console.WriteLine("5. Exit");
             string choice = Console.ReadLine();
-            switch (choice) 
+            switch (choice)
             {
+                
+            }
 
         }
         static void AdminMenu()

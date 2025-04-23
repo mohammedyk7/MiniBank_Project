@@ -16,23 +16,35 @@
             {
                 case "1": UserMenu(); break;
                 case "2": AdminMenu(); break;
-                case "0":
+                case "0": processing = false; break;
 
             }
         }
 
         static void UserMenu()
         {
+            bool enteringmenu = true;
+            while (enteringmenu)
             Console.WriteLine("Welcome to Mini Bank");
             Console.WriteLine("1. Create Account");
             Console.WriteLine("2. Deposit Money");
             Console.WriteLine("3. Withdraw Money");
             Console.WriteLine("4. Check Balance");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. submit rebiew");
+            Console.WriteLine("0. back to mainmenu");
             string choice = Console.ReadLine();
             switch (choice)
             {
-                
+                case "1": RequestAccountOpening(); break;
+                case "2": Deposit(); break;
+                case "3": WithDraw(); break;
+                case "4": Checkbalance(); break;
+                case "5": SubmitReview(); break;
+                case "0": enteringmenu = false; break;// so that the user can go back to the main menu
+
+
+
+
             }
 
         }

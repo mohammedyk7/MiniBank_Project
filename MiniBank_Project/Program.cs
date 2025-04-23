@@ -177,9 +177,8 @@
                     {
                         // Display each request
                         Console.WriteLine(request);
-                    }
-                    {
-                        Console.WriteLine(request);
+                  
+                        
                     }
 
                     // Dequeue the first request after reviewing

@@ -11,7 +11,7 @@
         static List<string> accountnames = new List<string>();
         static List<double> accountbalances = new List<double>();
         static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Renamed to avoid conflict with method name
-        static Stack<string> reviews = new Stack<string>();
+        static Stack<string> reviews = new Stack<string>();// for reviews
         //account number generator 
         static int lastaccountnumber;//so i can add for deposit and substract for the withdraw...
 

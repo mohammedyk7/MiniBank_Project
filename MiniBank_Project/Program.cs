@@ -12,7 +12,7 @@
                 Console.WriteLine("1. USERMENU ");
                 Console.WriteLine("2. ADMINMENU ");
                 Console.WriteLine("0. EXIT");
-                Console.Write("SELECT OPTION :");
+                Console.Write("SELECT OPTION :"); //added "write" without line so that it looks good
                 string? choice = Console.ReadLine();// "?" is used to get the user input
                 switch (choice)
                 {

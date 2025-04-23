@@ -13,7 +13,7 @@
         static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Renamed to avoid conflict with method name
         static Stack<string> reviews = new Stack<string>();
         //account number generator 
-        static int lastaccountnumber;
+        static int lastaccountnumber;//so i can add for deposit and substract for the withdraw...
 
         static void Main()
         {

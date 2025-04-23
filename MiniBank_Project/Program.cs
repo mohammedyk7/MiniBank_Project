@@ -13,7 +13,7 @@
                 Console.WriteLine("2. ADMINMENU ");
                 Console.WriteLine("0. EXIT");
                 Console.Write("SELECT OPTION :");
-                string choice = Console.ReadLine();
+                string? choice = Console.ReadLine();// "?" is used to get the user input
                 switch (choice)
                 {
                     case "1": UserMenu(); break;

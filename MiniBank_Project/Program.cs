@@ -188,7 +188,7 @@
                             if (parts.Length == 3)
                             {
                                 // Parse and add the account number to the accountnumbers list
-                                accountnumbers.Add(int.Parse(parts[0]));
+                                accountnumbers.Add(int.Parse(parts[0])); //123
                                 // Add the account name to the accountnames list
                                 accountnames.Add(parts[1]);
                                 // Parse and add the account balance to the accountbalances list

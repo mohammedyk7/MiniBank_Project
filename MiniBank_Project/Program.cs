@@ -165,8 +165,23 @@
             {
 
             }
-            static void ReviewRequest()//will be using stack ..
+            static void ReviewRequest()//will be using queue.. 
             {
+                if (RequestAccountOpeningQueue.count > 0);
+                {
+                    Console.WriteLine("Reviewing account opening requests:");
+                    foreach (var request in RequestAccountOpeningQueue)
+                    {
+                        Console.WriteLine(request);
+                    }
+                    // Dequeue the first request after reviewing
+                    string reviewedRequest = RequestAccountOpeningQueue.Dequeue();
+                    Console.WriteLine("Reviewed request: " + reviewedRequest);
+                }
+                else
+                {
+                    Console.WriteLine("No requests to review.");
+                }
 
             }
             static void ViewAccounts()

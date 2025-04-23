@@ -42,6 +42,7 @@
                 case "4": Checkbalance(); break;
                 case "5": SubmitReview(); break;
                 case "0": enteringmenu = false; break;// so that the user can go back to the main menu
+                    default: Console.WriteLine("Invalid choice, please try again."); break;//i have to avoid the infinite loop 
 
 
 

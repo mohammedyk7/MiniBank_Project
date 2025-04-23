@@ -172,26 +172,33 @@
             }
             static void ReviewAccountinformationfile() //stream reader 
             {
-                // Read account information from a file
+                // Check if the accounts file exists
                 if (File.Exists(accountsFilePath))
                 {
+                    // Open the file for reading using a StreamReader
                     using (StreamReader reader = new StreamReader(accountsFilePath))
                     {
                         string line;
+                        // Read each line from the file until the end
                         while ((line = reader.ReadLine()) != null)
                         {
+                            // Split the line into parts using a comma as the delimiter
                             string[] parts = line.Split(',');
+                            // Ensure the line has exactly three parts (account number, name, balance)
                             if (parts.Length == 3)
                             {
+                                // Parse and add the account number to the accountnumbers list
                                 accountnumbers.Add(int.Parse(parts[0]));
+                                // Add the account name to the accountnames list
                                 accountnames.Add(parts[1]);
+                                // Parse and add the account balance to the accountbalances list
                                 accountbalances.Add(double.Parse(parts[2]));
                             }
                         }
                     }
                 }
             }
-            { 
+            {
 
             }
             static void SubmitReview() // i will submit my review wil use stack..

@@ -102,6 +102,20 @@
 
             static void Deposit()
             { //we need account number ...
+                Console.WriteLine("enter your account number :");
+                int accountnumber = Convert.ToInt32(Console.ReadLine());
+                if (accountnumbers.Contains(accountnumber))
+                {
+                    Console.WriteLine("enter the amount you want to deposit :");
+                    double depositamount = Convert.ToDouble(Console.ReadLine());
+                    int index = accountnumbers.IndexOf(accountnumber);
+                    accountbalances[index] += depositamount;
+                    Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
+                }
+                else
+                {
+                    Console.WriteLine("wrong account number inserted ...");
+                }
 
             }
             static void WithDraw()

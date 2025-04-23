@@ -11,7 +11,7 @@
         static List<int> accountnumbers = new List<int>();
         static List<string> accountnames = new List<string>();
         static List<double> accountbalances = new List<double>();
-        static Queue<string> RequestAccountOpenin = new Queue<string>();
+        static Queue<string> RequestAccountOpening = new Queue<string>();// to store the account opening requests
         static Stack<string> reviews = new Stack<string>();
         //account number generator 
         static int lastaccountnumber;// so we can use it to add or substract s

@@ -122,7 +122,20 @@
 
             }
             static void WithDraw() //if i want withdraw my moneyyy
+
             {
+                Console.WriteLine("enter the amount you want to withdraw  :");
+                double withdrawamount = Convert.ToDouble(Console.ReadLine());
+                int index = accountnumbers.IndexOf(lastaccountnumber);
+                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)
+                {
+                    accountbalances[index] -= withdrawamount;
+                    Console.WriteLine("withdraw successful. New balance: " + accountbalances[index]);
+                }
+                else
+                {
+                    Console.WriteLine("insufficient balance ...");
+                }
 
             }
             static void Checkbalance()

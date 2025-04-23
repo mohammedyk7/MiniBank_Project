@@ -11,7 +11,7 @@
             Console.WriteLine("2. ADMINMENU ");
             Console.WriteLine("0. EXIT");
             Console.WriteLine("SELECT OPTION :");
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
             switch (choice) 
             {
                 case "1": UserMenu(); break;
@@ -32,7 +32,7 @@
             Console.WriteLine("4. Check Balance");
             Console.WriteLine("5. submit rebiew");
             Console.WriteLine("0. back to mainmenu");
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
             switch (choice)
             {
                 case "1": RequestAccountOpening(); break;

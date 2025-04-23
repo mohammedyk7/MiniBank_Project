@@ -1,7 +1,6 @@
 ﻿namespace MiniBank_Project
 {
     internal class Program
-        
     {
         //constants
         const double MINIMUM_BALANCE = 100.0;
@@ -11,11 +10,11 @@
         static List<int> accountnumbers = new List<int>();
         static List<string> accountnames = new List<string>();
         static List<double> accountbalances = new List<double>();
-        static Queue<string> RequestAccountOpening = new Queue<string>();// to store the account opening requests
+        static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Renamed to avoid conflict with method name
         static Stack<string> reviews = new Stack<string>();
         //account number generator 
-        static int lastaccountnumber;// so we can use it to add or substract s
-       
+        static int lastaccountnumber;
+
         static void Main()
         {
             bool processing = true;
@@ -26,16 +25,16 @@
                 Console.WriteLine("1. USERMENU ");
                 Console.WriteLine("2. ADMINMENU ");
                 Console.WriteLine("0. EXIT");
-                Console.Write("SELECT OPTION :"); //added "write" without line so that it looks good
-                string? choice = Console.ReadLine();// "?" is used to get the user input
+                Console.Write("SELECT OPTION :");
+                string? choice = Console.ReadLine();
                 switch (choice)
                 {
                     case "1": UserMenu(); break;
-                    case "2": AdminMenu(); break; 
-                    case "0": processing = false; break; // so that the user can exit the program
-                    default: Console.WriteLine("Invalid choice, please try again."); break; // i have to avoid the infinite loop run:)
+                    case "2": AdminMenu(); break;
+                    case "0": processing = false; break;
+                    default: Console.WriteLine("Invalid choice, please try again."); break;
                 }
-                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");//adding comments to the code
+                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
             }
 
             static void UserMenu()
@@ -60,14 +59,14 @@
                         case "3": WithDraw(); break;
                         case "4": Checkbalance(); break;
                         case "5": SubmitReview(); break;
-                        case "0": enteringmenu = false; break; // so that the user can go back to the main menu
-                        default: Console.WriteLine("Invalid choice, please try again."); break; // i have to avoid the infinite loop
+                        case "0": enteringmenu = false; break;
+                        default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
                     Console.WriteLine("welcome to $afe bank");
                 }
             }
 
-            static void AdminMenu() 
+            static void AdminMenu()
             {
                 bool insertadmin = true;
                 while (insertadmin)
@@ -86,16 +85,21 @@
                         case "2": ViewAccounts(); break;
                         case "3": ViewReviews(); break;
                         case "4": ProcessRequests(); break;
-                        case "0": insertadmin = false; break; // so that the user can go back to the main menu
-                        default: Console.WriteLine("Invalid choice, please try again."); break; // i have to avoid the infinite loop run
+                        case "0": insertadmin = false; break;
+                        default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
                 }
             }
 
             static void RequestAccountOpening()
             {
-
+                Console.WriteLine("Enter your name:");
+                string? name = Console.ReadLine();
+                Console.WriteLine("National ID ");
+                string? nationalID = Console.ReadLine();
+                RequestAccountOpeningQueue.Enqueue(name + " " + nationalID); // Fixed method name and used the renamed queue
             }
+
             static void Deposit()
             {
 

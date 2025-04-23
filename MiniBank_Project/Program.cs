@@ -134,11 +134,11 @@
                 }
                 else
                 {
-                    Console.WriteLine("insufficient balance ...");
+                    Console.WriteLine(" =( i guess you're poor ...");
                 }
 
             }
-            static void Checkbalance()
+            static void Checkbalance()//i will use foreach =)
             {
 
             }

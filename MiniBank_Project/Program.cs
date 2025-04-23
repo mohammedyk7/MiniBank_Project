@@ -237,7 +237,7 @@
             }
             static void ViewAccounts() //VIEW ACCOUNT 
             {
-                Console.writeline("==========ALL ACCOUNTS==========");
+                Console.WriteLine("==========ALL ACCOUNTS==========");
                 // Iterate through all accounts and display their information
                 for (int i = 0; i < accountnumbers.Count; i++)
                 {
@@ -247,9 +247,30 @@
             }
             static void ViewReviews()
             {
+                Console.WriteLine("==========ALL REVIEWS==========");
+                foreach (var review in reviews)
+                {
+                    Console.WriteLine(review);
+                }
+                // Check if there are any reviews in the stack
+                Console.WriteLine(Console.ReadLine());
 
             }
-            static void ProcessRequests()
+            static void ProcessRequests()//process requests
+            {
+                // Check if there are any requests in the queue
+                if (RequestAccountOpeningQueue.Count > 0)
+                {
+                    // Dequeue the first request and process it
+                    string request = RequestAccountOpeningQueue.Dequeue();
+                    Console.WriteLine("Processing request: " + request);
+                    // Here you can add code to create an account based on the request
+                }
+                else
+                {
+                    Console.WriteLine("No requests to process.");
+                }
+            }
             {
 
             }

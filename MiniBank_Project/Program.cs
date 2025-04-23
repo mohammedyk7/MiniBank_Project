@@ -157,6 +157,12 @@
             }
             static void SubmitReview() // i will submit my review wil use stack..
             {
+                Console.WriteLine("Enter your review:");
+                string? review = Console.ReadLine();
+                reviews.Push(review);
+                Console.WriteLine("Review submitted successfully.");
+            }
+            {
 
             }
             static void ReviewRequest()

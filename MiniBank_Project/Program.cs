@@ -52,7 +52,7 @@
                 }
             }
 
-            static void AdminMenu() // Fix: Ensure AdminMenu is used
+            static void AdminMenu() 
             {
                 bool insertadmin = true;
                 while (insertadmin)

@@ -138,7 +138,7 @@
                 }
 
             }
-            static void Checkbalance()//i will use foreach =)
+            static void Checkbalance()
             {
                 Console.WriteLine("enter your account number :");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());

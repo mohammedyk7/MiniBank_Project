@@ -165,20 +165,18 @@
             {
 
             }
-            static void ReviewRequest()//will be using queue.. 
+            static void ReviewRequest() //will be using queue.. 
             {
                 // Check if there are any account opening requests in the queue
-                if (RequestAccountOpeningQueue.count > 0);
+                if (RequestAccountOpeningQueue.Count > 0) // Count must be in capital "Count"
                 {
                     Console.WriteLine("Reviewing account opening requests:");
 
                     // Iterate through all requests in the queue and display them
-                    foreach (var request in RequestAccountOpeningQueue) //i stored it there in a string [       ] [     ] [   ]  [ ]....etc
+                    foreach (var request in RequestAccountOpeningQueue) // Queue<string> supports enumeration
                     {
                         // Display each request
                         Console.WriteLine(request);
-                  
-                        
                     }
 
                     // Dequeue the first request after reviewing
@@ -190,7 +188,6 @@
                     // If no requests are present, display a message
                     Console.WriteLine("No requests to review.");
                 }
-
             }
             static void ViewAccounts()
             {

@@ -127,7 +127,7 @@
                 Console.WriteLine("enter the amount you want to withdraw  :");
                 double withdrawamount = Convert.ToDouble(Console.ReadLine());
                 int index = accountnumbers.IndexOf(lastaccountnumber);
-                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)//so i create a limit for ittt
+                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)//so i create a limit for ittt ">="
                 {
                     accountbalances[index] -= withdrawamount;
                     Console.WriteLine("withdraw successful. New balance: " + accountbalances[index]);

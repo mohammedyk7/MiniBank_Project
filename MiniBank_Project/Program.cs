@@ -175,6 +175,10 @@
                     // Iterate through all requests in the queue and display them
                     foreach (var request in RequestAccountOpeningQueue) //i stored it there in a string [       ] [     ] [   ]  [ ]....etc
                     {
+                        // Display each request
+                        Console.WriteLine(request);
+                    }
+                    {
                         Console.WriteLine(request);
                     }
 

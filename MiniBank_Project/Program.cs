@@ -167,19 +167,24 @@
             }
             static void ReviewRequest()//will be using queue.. 
             {
+                // Check if there are any account opening requests in the queue
                 if (RequestAccountOpeningQueue.count > 0);
                 {
                     Console.WriteLine("Reviewing account opening requests:");
-                    foreach (var request in RequestAccountOpeningQueue)
+
+                    // Iterate through all requests in the queue and display them
+                    foreach (var request in RequestAccountOpeningQueue) //i stored it there in a string [       ] [     ] [   ]  [ ]....etc
                     {
                         Console.WriteLine(request);
                     }
+
                     // Dequeue the first request after reviewing
                     string reviewedRequest = RequestAccountOpeningQueue.Dequeue();
                     Console.WriteLine("Reviewed request: " + reviewedRequest);
                 }
                 else
                 {
+                    // If no requests are present, display a message
                     Console.WriteLine("No requests to review.");
                 }
 

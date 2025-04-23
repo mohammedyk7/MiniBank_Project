@@ -23,5 +23,41 @@
             Console.WriteLine("2. Delete Account");
             Console.WriteLine("3. Exit");
         }
+        static void RequestAccountOpening() 
+        {
+
+        }
+        static void Deposit() 
+        {
+
+        }
+        static void WithDraw() 
+        {
+
+        }
+        static void Checkbalance() 
+        {
+
+        }
+        static void SubmitReview() 
+        {
+
+        }
+        static void ReviewRequest() 
+        {
+
+        }
+        static void ViewAccounts() 
+        {
+
+        }
+        static void ViewReviews() 
+        {
+
+        }
+        static void ProcessRequests() 
+        {
+
+        }
     }
 }

@@ -18,6 +18,8 @@
         static void Main()
         {
             SaveAccountsinformationfile();
+            ReviewAccountinformationfile();
+
             // Load account information from the file
             bool processing = true;
             while (processing)
@@ -167,6 +169,30 @@
                         writer.WriteLine($"{accountnumbers[i]},{accountnames[i]},{accountbalances[i]}");
                     }
                 }
+            }
+            static void ReviewAccountinformationfile() //stream reader 
+            {
+                // Read account information from a file
+                if (File.Exists(accountsFilePath))
+                {
+                    using (StreamReader reader = new StreamReader(accountsFilePath))
+                    {
+                        string line;
+                        while ((line = reader.ReadLine()) != null)
+                        {
+                            string[] parts = line.Split(',');
+                            if (parts.Length == 3)
+                            {
+                                accountnumbers.Add(int.Parse(parts[0]));
+                                accountnames.Add(parts[1]);
+                                accountbalances.Add(double.Parse(parts[2]));
+                            }
+                        }
+                    }
+                }
+            }
+            { 
+
             }
             static void SubmitReview() // i will submit my review wil use stack..
             {

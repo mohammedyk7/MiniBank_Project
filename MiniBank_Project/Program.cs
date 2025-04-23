@@ -61,6 +61,7 @@
                     Console.WriteLine("1. review requests");
                     Console.WriteLine("2. view accounts ");
                     Console.WriteLine("3. view reviews ");
+                    Console.WriteLine("4. process requests");
                     Console.WriteLine("0. exit");
                     string choice = Console.ReadLine();
                     switch (choice)
@@ -68,6 +69,7 @@
                         case "1": ReviewRequest(); break;
                         case "2": ViewAccounts(); break;
                         case "3": ViewReviews(); break;
+                        case "4": ProcessRequests(); break;
                         case "0": insertadmin = false; break; // so that the user can go back to the main menu
                         default: Console.WriteLine("Invalid choice, please try again."); break; // i have to avoid the infinite loop run
                     }

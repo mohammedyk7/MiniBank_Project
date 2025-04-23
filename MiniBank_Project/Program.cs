@@ -237,6 +237,12 @@
             }
             static void ViewAccounts() //VIEW ACCOUNT 
             {
+                Console.writeline("==========ALL ACCOUNTS==========");
+                // Iterate through all accounts and display their information
+                for (int i = 0; i < accountnumbers.Count; i++)
+                {
+                    Console.WriteLine($"Account Number: {accountnumbers[i]}, Name: {accountnames[i]}, Balance: {accountbalances[i]}");
+                }
 
             }
             static void ViewReviews()

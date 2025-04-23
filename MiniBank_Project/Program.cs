@@ -155,6 +155,17 @@
                 }
 
             }
+            static void SaveAccountsinformationfile()
+            {
+                // Save account information to a file
+                using (StreamWriter writer = new StreamWriter(accountsFilePath))
+                {
+                    for (int i = 0; i < accountnumbers.Count; i++)
+                    {
+                        writer.WriteLine($"{accountnumbers[i]},{accountnames[i]},{accountbalances[i]}");
+                    }
+                }
+            }
             static void SubmitReview() // i will submit my review wil use stack..
             {
                 Console.WriteLine("Enter your review:");

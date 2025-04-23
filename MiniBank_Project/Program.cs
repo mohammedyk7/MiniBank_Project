@@ -12,7 +12,7 @@
                 Console.WriteLine("1. USERMENU ");
                 Console.WriteLine("2. ADMINMENU ");
                 Console.WriteLine("0. EXIT");
-                Console.WriteLine("SELECT OPTION :");
+                Console.Write("SELECT OPTION :");
                 string choice = Console.ReadLine();
                 switch (choice)
                 {
@@ -37,6 +37,7 @@
                     Console.WriteLine("4. Check Balance");
                     Console.WriteLine("5. submit rebiew");
                     Console.WriteLine("0. back to mainmenu");
+                    Console.Write("SELECT OPTION :");
                     string choice = Console.ReadLine();
                     switch (choice)
                     {
@@ -63,6 +64,7 @@
                     Console.WriteLine("3. view reviews ");
                     Console.WriteLine("4. process requests");
                     Console.WriteLine("0. exit");
+                    Console.Write("SELECT OPTION :");
                     string choice = Console.ReadLine();
                     switch (choice)
                     {

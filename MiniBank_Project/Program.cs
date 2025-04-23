@@ -140,6 +140,19 @@
             }
             static void Checkbalance()//i will use foreach =)
             {
+                Console.WriteLine("enter your account number :");
+                int accountnumber = Convert.ToInt32(Console.ReadLine());
+                if (accountnumbers.Contains(accountnumber))
+                {
+                    // Find the index of the account number in the list
+                    int index = accountnumbers.IndexOf(accountnumber);
+                    // Display the balance at the found index
+                    Console.WriteLine("Your balance is: " + accountbalances[index]);
+                }
+                else
+                {
+                    Console.WriteLine("wrong account number inserted ..."); //if false ...
+                }
 
             }
             static void SubmitReview()

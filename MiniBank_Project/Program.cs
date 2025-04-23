@@ -16,7 +16,7 @@
             {
                 case "1": UserMenu(); break;
                 case "2": AdminMenu(); break;
-                case "0": processing = false; break;
+                case "0": processing = false; break;// so that the user can exit the program
 
             }
         }

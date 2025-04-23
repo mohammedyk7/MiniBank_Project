@@ -104,7 +104,7 @@
                 RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID); // Fixed method name and used the renamed queue
             }
 
-            static void Deposit()
+            static void Deposit()//why we need index?
             { //we need account number ...
                 Console.WriteLine("enter your account number :");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());

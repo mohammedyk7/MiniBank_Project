@@ -205,7 +205,7 @@
             {
                 Console.WriteLine("Enter your review:");
                 string? review = Console.ReadLine();
-                reviewS.Push(review);//push the last in the stack ((out))
+                reviews.Push(review);//push the last in the stack ((out))
                 Console.WriteLine("Review submitted successfully.");
             }
             {

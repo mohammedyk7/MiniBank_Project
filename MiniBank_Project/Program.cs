@@ -263,6 +263,211 @@
                 {
                     // Dequeue the first request and process it
                     string request = RequestAccountOpeningQueue.Dequeue();
+                    //[// Display the request being processed]
+                    static void Main()
+                    {
+                        try
+                        {
+                            SaveAccountsinformationfile();
+                            ReviewAccountinformationfile();
+
+                            // Load account information from the file
+                            bool processing = true;
+                            while (processing)
+                            {
+                                Console.Clear();
+                                Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
+                                Console.WriteLine("1. USERMENU ");
+                                Console.WriteLine("2. ADMINMENU ");
+                                Console.WriteLine("0. EXIT");
+                                Console.Write("SELECT OPTION :");
+                                string? choice = Console.ReadLine();
+                                switch (choice)
+                                {
+                                    case "1": UserMenu(); break;
+                                    case "2": AdminMenu(); break;
+                                    case "0": processing = false; break;
+                                    default: Console.WriteLine("Invalid choice, please try again."); break;
+                                }
+                                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+                        }
+                    }
+
+                    static void Deposit() //why we need index?
+                    { //we need account number ...
+                        try
+                        {
+                            Console.WriteLine("enter your account number :");
+                            int accountnumber = Convert.ToInt32(Console.ReadLine());
+                            if (accountnumbers.Contains(accountnumber))
+                            {
+                                Console.WriteLine("enter the amount you want to deposit :");
+                                double depositamount = Convert.ToDouble(Console.ReadLine());
+                                // Find the index of the account number in the list
+                                int index = accountnumbers.IndexOf(accountnumber);
+                                // Add the deposit amount to the account balance at the found index
+                                accountbalances[index] += depositamount;
+                                // Display a success message with the updated balance
+                                Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
+                            }
+                            else
+                            {
+                                Console.WriteLine("wrong account number inserted ..."); //if false ...
+                            }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred during deposit: {ex.Message}");
+                        }
+                    }
+
+                    static void WithDraw() //if i want withdraw my moneyyy
+                    {
+                        try
+                        {
+                            Console.WriteLine("enter the amount you want to withdraw  :");
+                            double withdrawamount = Convert.ToDouble(Console.ReadLine());
+                            int index = accountnumbers.IndexOf(lastaccountnumber);
+                            if (index == -1)
+                            {
+                                Console.WriteLine("Account not found.");
+                                return;
+                            }
+                            if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE) //so i create a limit for ittt ">="
+                            {
+                                accountbalances[index] -= withdrawamount;
+                                Console.WriteLine("withdraw successful. New balance: " + accountbalances[index]);
+                            }
+                            else
+                            {
+                                Console.WriteLine(" =( i guess you're poor ...");
+                            }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred during withdrawal: {ex.Message}");
+                        }
+                    }
+
+                    static void Checkbalance()
+                    {
+                        try
+                        {
+                            Console.WriteLine("enter your account number :");
+                            int accountnumber = Convert.ToInt32(Console.ReadLine());
+                            if (accountnumbers.Contains(accountnumber))
+                            {
+                                // Find the index of the account number in the list
+                                int index = accountnumbers.IndexOf(accountnumber);
+                                // Display the balance at the found index
+                                Console.WriteLine("Your balance is: " + accountbalances[index]);
+                            }
+                            else
+                            {
+                                Console.WriteLine("wrong account number inserted ..."); //if false ...
+                            }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
+                        }
+                    }
+
+                    static void SaveAccountsinformationfile()
+                    {
+                        try
+                        {
+                            // Save account information to a file
+                            using (StreamWriter writer = new StreamWriter(accountsFilePath))
+                            {
+                                for (int i = 0; i < accountnumbers.Count; i++)
+                                {
+                                    writer.WriteLine($"{accountnumbers[i]},{accountnames[i]},{accountbalances[i]}");
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
+                        }
+                    }
+
+                    static void ReviewAccountinformationfile() //stream reader 
+                    {
+                        try
+                        {
+                            // Check if the accounts file exists
+                            if (File.Exists(accountsFilePath))
+                            {
+                                // Open the file for reading using a StreamReader
+                                using (StreamReader reader = new StreamReader(accountsFilePath))
+                                {
+                                    string line;
+                                    // Read each line from the file until the end
+                                    while ((line = reader.ReadLine()) != null)
+                                    {
+                                        // Split the line into parts using a comma as the delimiter
+                                        string[] parts = line.Split(',');
+                                        // Ensure the line has exactly three parts (account number, name, balance)
+                                        if (parts.Length == 3)
+                                        {
+                                            // Parse and add the account number to the accountnumbers list
+                                            accountnumbers.Add(int.Parse(parts[0])); //123
+                                            // Add the account name to the accountnames list
+                                            accountnames.Add(parts[1]);
+                                            // Parse and add the account balance to the accountbalances list
+                                            accountbalances.Add(double.Parse(parts[2]));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Error parsing account information. Please check the file format.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while reviewing account information: {ex.Message}");
+                        }
+                    }
+
+                    static void SubmitReview() // i will submit my review wil use stack..
+                    {
+                        try
+                        {
+                            Console.WriteLine("Enter your review:");
+                            string? review = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(review))
+                            {
+                                Console.WriteLine("Review cannot be empty.");
+                                return;
+                            }
+                            reviews.Push(review); //push the last in the stack ((out))
+                            Console.WriteLine("Review submitted successfully.");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"An error occurred while submitting the review: {ex.Message}");
+                        }
+                    }
                     Console.WriteLine("Processing request: " + request);
 
                     // Here you can add code to create an account based on the request

@@ -97,7 +97,7 @@
 
             static void RequestAccountOpening()
             {
-                Console.WriteLine("Enter your name:");
+                Console.WriteLine("Enter your name:"); //enter your name so i can enter the account number
                 string? name = Console.ReadLine();
                 Console.WriteLine("National ID ");
                 string? nationalID = Console.ReadLine();

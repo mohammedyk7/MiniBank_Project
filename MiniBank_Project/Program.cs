@@ -23,7 +23,6 @@
             try
             {
                 // Load account information from the file
-                SaveAccountsinformationfile();
                 ReviewAccountinformationfile();
 
                 bool processing = true;
@@ -138,13 +137,12 @@
             try
             {
                 Console.WriteLine("Enter your name:");
-                string? Name = Console.ReadLine();//VARIABLE CAN BE STRING OR NULL
+                string? name = Console.ReadLine();
                 Console.WriteLine("National ID:");
-                string? NationalID = Console.ReadLine();
+                string? nationalID = Console.ReadLine();
 
                 // Add the request to the queue
-                RequestAccountOpeningQueue.Enqueue(Name + " === " + NationalID);//LIKE A LINE OF PEOPLE WAITING FOR THE BANK TO OPEN THEIR ACCOUNT
-                //ENQUEUE MEANS TO ADD TO THE END OF THE QUEUE
+                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);
             }
             catch (Exception ex)
             {
@@ -154,7 +152,7 @@
         }
 
         // Handles depositing money into an account
-        static void Deposit()//INSERT MONEY 
+        static void Deposit()
         {
             try
             {
@@ -168,13 +166,13 @@
                     double depositamount = Convert.ToDouble(Console.ReadLine());
 
                     // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
-                    accountbalances[index] += depositamount;//add the deposit amount to the account balance
+                    int index = accountnumbers.IndexOf(accountnumber);
+                    accountbalances[index] += depositamount;
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }
                 else
                 {
-                    Console.WriteLine("Wrong account number inserted=(");
+                    Console.WriteLine("Wrong account number inserted.");
                 }
             }
             catch (FormatException)
@@ -201,14 +199,14 @@
                 if (accountnumbers.Contains(accountnumber))
                 {
                     Console.WriteLine("Enter the amount you want to withdraw:");
-                    double withdrawamount = Convert.ToDouble(Console.ReadLine());//cant be integer 
+                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
-                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
+                    int index = accountnumbers.IndexOf(accountnumber);
 
-                    if (accountbalances[index] >= withdrawamount)//if account number balance in the index >= withdraw amount ..
+                    if (accountbalances[index] >= withdrawamount)
                     {
-                        accountbalances[index] -= withdrawamount;//if yes , withdraw ..
-                        Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);
+                        accountbalances[index] -= withdrawamount;
+                        Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);
                     }
                     else
                     {
@@ -217,7 +215,7 @@
                 }
                 else
                 {
-                    Console.WriteLine("Wrong account number inserted =(");
+                    Console.WriteLine("Wrong account number inserted.");
                 }
             }
             catch (FormatException)
@@ -228,21 +226,21 @@
             {
                 Console.WriteLine("Something went wrong: " + ex.Message);
             }
+        }
 
-
-            // Handles checking the balance of an account
-            static void Checkbalance()
+        // Handles checking the balance of an account
+        static void Checkbalance()
         {
             try
             {
-                Console.WriteLine("Enter your account number:");// 
+                Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))//check if it exists in the list 
+                if (accountnumbers.Contains(accountnumber))
                 {
-                    int index = accountnumbers.IndexOf(accountnumber);//If the value is found, IndexOf returns the zero-based index[0][1]..etc of the first match.
-                    Console.WriteLine("Your balance is: " + accountbalances[index]);// I alrerady added the list in the class for account balances ..
+                    int index = accountnumbers.IndexOf(accountnumber);
+                    Console.WriteLine("Your balance is: " + accountbalances[index]);
                 }
                 else
                 {
@@ -425,4 +423,3 @@
             }
         }
     }
-}

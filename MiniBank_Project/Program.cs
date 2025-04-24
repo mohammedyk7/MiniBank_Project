@@ -16,7 +16,7 @@
 
         // Queues and Stacks
          static Queue<string> RequestAccountOpeningQueue = new Queue<string>();
-        private static Stack<string> reviews = new Stack<string>();
+         static Stack<string> reviews = new Stack<string>();
 
         static void Main()
         {

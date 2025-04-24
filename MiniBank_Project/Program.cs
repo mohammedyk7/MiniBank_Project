@@ -164,19 +164,26 @@
                 // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))
                 {
-                    Console.WriteLine("Enter the amount you want to deposit:");
-                    double depositamount = Convert.ToDouble(Console.ReadLine());
+                    Console.WriteLine("Enter the amount you want to withdraw:");
+                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
                     // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
-                    accountbalances[index] += depositamount;//add the deposit amount to the account balance
-                    Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
+                    int index = accountnumbers.IndexOf(accountnumber); // Find the account index
+
+                    if (accountbalances[index] >= withdrawamount) // Optional: prevent negative balance
+                    {
+                        accountbalances[index] -= withdrawamount; // Subtract the correct amount
+                        Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Insufficient balance.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Wrong account number inserted.");
+                    Console.WriteLine("Wrong account number inserted =(");
                 }
-            }
             catch (FormatException)
             {
                 // Handle invalid input format
@@ -190,44 +197,48 @@
         }
 
         // Handles withdrawing money from an account
-        static void WithDraw()
+        static void WithDraw()// small differences from the deposit 
         {
             try
             {
-                Console.WriteLine("Enter the amount you want to withdraw:");
-                double withdrawamount = Convert.ToDouble(Console.ReadLine());
+                Console.WriteLine("Enter your account number:");
+                int accountnumber = Convert.ToInt32(Console.ReadLine());
 
-                // Find the account and check if withdrawal is possible
-                int index = accountnumbers.IndexOf(lastaccountnumber);//If found, it gives you the position (index) of that account.
-                if (index == -1)//if not  found in the list
+                // Check if the account exists
+                if (accountnumbers.Contains(accountnumber))
                 {
-                    Console.WriteLine("Account not found.");
-                    return;
-                }
-                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)//SO THAT IT DOEST GO BELOW MINIMUM BALANCE 
-                {
-                    accountbalances[index] -= withdrawamount;
-                    Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);
+                    Console.WriteLine("Enter the amount you want to withdraw:");
+                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
+
+                    int index = accountnumbers.IndexOf(accountnumber);
+
+                    if (accountbalances[index] >= withdrawamount)
+                    {
+                        accountbalances[index] -= withdrawamount;
+                        Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Insufficient balance.");
+                    }
                 }
                 else
                 {
-                    Console.WriteLine("Insufficient balance.");
+                    Console.WriteLine("Wrong account number inserted =(");
                 }
             }
             catch (FormatException)
             {
-                // Handle invalid input format
-                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+                Console.WriteLine("Invalid input. Please enter numbers only.");
             }
             catch (Exception ex)
             {
-                // Handle other errors during withdrawal
-                Console.WriteLine($"An error occurred during withdrawal: {ex.Message}");
+                Console.WriteLine("Something went wrong: " + ex.Message);
             }
-        }
 
-        // Handles checking the balance of an account
-        static void Checkbalance()
+
+            // Handles checking the balance of an account
+            static void Checkbalance()
         {
             try
             {

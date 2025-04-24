@@ -207,7 +207,7 @@
 
                     if (accountbalances[index] >= withdrawamount)//if account number balance in the index >= withdraw amount ..
                     {
-                        accountbalances[index] -= withdrawamount;
+                        accountbalances[index] -= withdrawamount;//if yes , withdraw ..
                         Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);
                     }
                     else

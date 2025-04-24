@@ -198,7 +198,7 @@
                 double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
                 // Find the account and check if withdrawal is possible
-                int index = accountnumbers.IndexOf(lastaccountnumber);
+                int index = accountnumbers.IndexOf(lastaccountnumber);//If found, it gives you the position (index) of that account.
                 if (index == -1)
                 {
                     Console.WriteLine("Account not found.");

@@ -3,7 +3,7 @@
     internal class Program
     {
         // Constants
-        private const double MINIMUM_BALANCE = 100.0;
+         const double MINIMUM_BALANCE = 100.0;
         private const string accountsFilePath = "accounts.txt";
 
         // Global Variables

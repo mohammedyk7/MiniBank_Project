@@ -74,6 +74,7 @@
                     Console.WriteLine("3. Withdraw Money");
                     Console.WriteLine("4. Check Balance");
                     Console.WriteLine("5. Submit Review");
+                    Console.WriteLine("6. View Transaction History");
                     Console.WriteLine("0. Back to Main Menu");
                     Console.Write("SELECT OPTION :");
                     string choice = Console.ReadLine();
@@ -86,6 +87,7 @@
                         case "3": WithDraw(); break; // Withdraw money from an account
                         case "4": Checkbalance(); break; // Check account balance
                         case "5": SubmitReview(); break; // Submit a review
+                        case "6": transactionHistory(); break; // View transaction history
                         case "0": enteringmenu = false; break; // Return to main menu
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
@@ -262,8 +264,33 @@
                 Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
             }
         }
-        static void TransactionHistory() 
+        static void transactionHistory() 
         {
+            //i need account numbers,names,balances, and transaction history
+            // i need deposits
+            static void ViewTransactionHistory()
+            {
+                try
+                {
+                    if (transactionHistory.Count == 0)
+                    {
+                        Console.WriteLine("No transactions have been made yet.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Transaction History:");
+                        foreach (string transaction in transactionHistory)
+                        {
+                            Console.WriteLine(transaction);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error while viewing transaction history: " + ex.Message);
+                }
+            }
+
 
         }
 

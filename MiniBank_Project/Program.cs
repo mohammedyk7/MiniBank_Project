@@ -350,7 +350,7 @@
         {
             try
             {
-                if (RequestAccountOpeningQueue.Count > 0)
+                if (RequestAccountOpeningQueue.Count > 0)//here im checking the queue that its not empty ..
                 {
                     Console.WriteLine("Reviewing account opening requests:");
                     foreach (var request in RequestAccountOpeningQueue)

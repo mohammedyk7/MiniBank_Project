@@ -15,7 +15,7 @@
          static List<double> accountbalances = new List<double>();
 
         // Queues and Stacks
-        private static Queue<string> RequestAccountOpeningQueue = new Queue<string>();
+         static Queue<string> RequestAccountOpeningQueue = new Queue<string>();
         private static Stack<string> reviews = new Stack<string>();
 
         static void Main()

@@ -162,7 +162,7 @@
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))
+                if (accountnumbers.Contains(accountnumber))// if the account numbers exist in the index....
                 {
                     Console.WriteLine("Enter the amount you want to deposit:");
                     double depositamount = Convert.ToDouble(Console.ReadLine());

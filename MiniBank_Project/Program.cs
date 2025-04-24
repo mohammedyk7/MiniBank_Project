@@ -102,7 +102,7 @@
         {
             try
             {
-                bool insertadmin = true;
+                bool insertadmin = true;//so that it keeps running....
                 while (insertadmin)//while the program is running ...
                 {
                     Console.WriteLine("Welcome to Mini Bank Admin");

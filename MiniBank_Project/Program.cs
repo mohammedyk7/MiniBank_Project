@@ -164,26 +164,19 @@
                 // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))
                 {
-                    Console.WriteLine("Enter the amount you want to withdraw:");
-                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
+                    Console.WriteLine("Enter the amount you want to deposit:");
+                    double depositamount = Convert.ToDouble(Console.ReadLine());
 
                     // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber); // Find the account index
-
-                    if (accountbalances[index] >= withdrawamount) // Optional: prevent negative balance
-                    {
-                        accountbalances[index] -= withdrawamount; // Subtract the correct amount
-                        Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Insufficient balance.");
-                    }
+                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
+                    accountbalances[index] += depositamount;//add the deposit amount to the account balance
+                    Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }
                 else
                 {
-                    Console.WriteLine("Wrong account number inserted =(");
+                    Console.WriteLine("Wrong account number inserted=(");
                 }
+            }
             catch (FormatException)
             {
                 // Handle invalid input format
@@ -197,7 +190,7 @@
         }
 
         // Handles withdrawing money from an account
-        static void WithDraw()// small differences from the deposit 
+        static void WithDraw()
         {
             try
             {
@@ -210,9 +203,9 @@
                     Console.WriteLine("Enter the amount you want to withdraw:");
                     double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
-                    int index = accountnumbers.IndexOf(accountnumber);
+                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
 
-                    if (accountbalances[index] >= withdrawamount)
+                    if (accountbalances[index] >= withdrawamount)//if account number balance in the index >= withdraw amount ..
                     {
                         accountbalances[index] -= withdrawamount;
                         Console.WriteLine("Withdraw done. New balance: " + accountbalances[index]);

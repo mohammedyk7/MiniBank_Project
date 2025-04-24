@@ -144,6 +144,7 @@
 
                 // Add the request to the queue
                 RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);//LIKE A LINE OF PEOPLE WAITING FOR THE BANK TO OPEN THEIR ACCOUNT
+                //ENQUEUE MEANS TO ADD TO THE END OF THE QUEUE
             }
             catch (Exception ex)
             {

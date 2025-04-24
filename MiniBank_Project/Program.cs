@@ -13,6 +13,8 @@
         static List<int> accountnumbers = new List<int>(); // Stores account numbers
         static List<string> accountnames = new List<string>(); // Stores account holder names
         static List<double> accountbalances = new List<double>(); // Stores account balances
+        static List<string> transactionHistory = new List<string>(); // Stores transaction history
+
 
         // Queue for account opening requests and stack for reviews
         static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Stores account opening requests

@@ -2,46 +2,59 @@
 {
     internal class Program
     {
-        //constants
-        const double MINIMUM_BALANCE = 100.0;
-        const string accountsFilePath = "accounts.txt";
-        const string reviewsFilePath = "reviews.txt";
-        // global list
-        static List<int> accountnumbers = new List<int>();
-        static List<string> accountnames = new List<string>();
-        static List<double> accountbalances = new List<double>();
-        static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Renamed to avoid conflict with method name
-        static Stack<string> reviews = new Stack<string>();// for reviews
-        //account number generator 
-        static int lastaccountnumber;//so i can add for deposit and substract for the withdraw...
+        // Constants
+        private const double MINIMUM_BALANCE = 100.0;
+        private const string accountsFilePath = "accounts.txt";
+
+        // Global Variables
+        static int lastaccountnumber = 0;
+
+        // Lists
+        private static List<int> accountnumbers = new List<int>();
+        private static List<string> accountnames = new List<string>();
+        private static List<double> accountbalances = new List<double>();
+
+        // Queues and Stacks
+        private static Queue<string> RequestAccountOpeningQueue = new Queue<string>();
+        private static Stack<string> reviews = new Stack<string>();
 
         static void Main()
         {
-            SaveAccountsinformationfile();
-            ReviewAccountinformationfile();
-
-            // Load account information from the file
-            bool processing = true;
-            while (processing)
+            try
             {
-                Console.Clear();
-                Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
-                Console.WriteLine("1. USERMENU ");
-                Console.WriteLine("2. ADMINMENU ");
-                Console.WriteLine("0. EXIT");
-                Console.Write("SELECT OPTION :");
-                string? choice = Console.ReadLine();
-                switch (choice)
-                {
-                    case "1": UserMenu(); break;
-                    case "2": AdminMenu(); break;
-                    case "0": processing = false; break;
-                    default: Console.WriteLine("Invalid choice, please try again."); break;
-                }
-                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
-            }
+                SaveAccountsinformationfile();
+                ReviewAccountinformationfile();
 
-            static void UserMenu()
+                // Load account information from the file
+                bool processing = true;
+                while (processing)
+                {
+                    Console.Clear();
+                    Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
+                    Console.WriteLine("1. USERMENU ");
+                    Console.WriteLine("2. ADMINMENU ");
+                    Console.WriteLine("0. EXIT");
+                    Console.Write("SELECT OPTION :");
+                    string? choice = Console.ReadLine();
+                    switch (choice)
+                    {
+                        case "1": UserMenu(); break;
+                        case "2": AdminMenu(); break;
+                        case "0": processing = false; break;
+                        default: Console.WriteLine("Invalid choice, please try again."); break;
+                    }
+                    Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
+            }
+        }
+
+        static void UserMenu()
+        {
+            try
             {
                 bool enteringmenu = true;
                 while (enteringmenu)
@@ -52,8 +65,8 @@
                     Console.WriteLine("2. Deposit Money");
                     Console.WriteLine("3. Withdraw Money");
                     Console.WriteLine("4. Check Balance");
-                    Console.WriteLine("5. submit rebiew");
-                    Console.WriteLine("0. back to mainmenu");
+                    Console.WriteLine("5. Submit Review");
+                    Console.WriteLine("0. Back to Main Menu");
                     Console.Write("SELECT OPTION :");
                     string choice = Console.ReadLine();
                     switch (choice)
@@ -66,21 +79,28 @@
                         case "0": enteringmenu = false; break;
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
-                    Console.WriteLine("welcome to $afe bank");
+                    Console.WriteLine("Welcome to $afe Bank");
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred in the User Menu: {ex.Message}");
+            }
+        }
 
-            static void AdminMenu()
+        static void AdminMenu()
+        {
+            try
             {
                 bool insertadmin = true;
                 while (insertadmin)
                 {
                     Console.WriteLine("Welcome to Mini Bank Admin");
-                    Console.WriteLine("1. review requests");
-                    Console.WriteLine("2. view accounts ");
-                    Console.WriteLine("3. view reviews ");
-                    Console.WriteLine("4. process requests");
-                    Console.WriteLine("0. exit");
+                    Console.WriteLine("1. Review Requests");
+                    Console.WriteLine("2. View Accounts");
+                    Console.WriteLine("3. View Reviews");
+                    Console.WriteLine("4. Process Requests");
+                    Console.WriteLine("0. Exit");
                     Console.Write("SELECT OPTION :");
                     string? choice = Console.ReadLine();
                     switch (choice)
@@ -94,74 +114,119 @@
                     }
                 }
             }
-
-            static void RequestAccountOpening()
+            catch (Exception ex)
             {
-                Console.WriteLine("Enter your name:"); //enter your name so i can enter the account number
-                string? name = Console.ReadLine();
-                Console.WriteLine("National ID ");
-                string? nationalID = Console.ReadLine();
-                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID); // Fixed method name and used the renamed queue
+                Console.WriteLine($"An error occurred in the Admin Menu: {ex.Message}");
             }
+        }
 
-            static void Deposit()//why we need index?
-            { //we need account number ...
-                Console.WriteLine("enter your account number :");
+        static void RequestAccountOpening()
+        {
+            try
+            {
+                Console.WriteLine("Enter your name:");
+                string? name = Console.ReadLine();
+                Console.WriteLine("National ID:");
+                string? nationalID = Console.ReadLine();
+                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while requesting account opening: {ex.Message}");
+            }
+        }
+
+        static void Deposit()
+        {
+            try
+            {
+                Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
                 if (accountnumbers.Contains(accountnumber))
                 {
-                    Console.WriteLine("enter the amount you want to deposit :");
+                    Console.WriteLine("Enter the amount you want to deposit:");
                     double depositamount = Convert.ToDouble(Console.ReadLine());
-                    // Find the index of the account number in the list
                     int index = accountnumbers.IndexOf(accountnumber);
-                    // Add the deposit amount to the account balance at the found index
                     accountbalances[index] += depositamount;
-                    // Display a success message with the updated balance
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }
                 else
                 {
-                    Console.WriteLine("wrong account number inserted ..."); //if false ...
+                    Console.WriteLine("Wrong account number inserted.");
                 }
-
             }
-            static void WithDraw() //if i want withdraw my moneyyy
-
+            catch (FormatException)
             {
-                Console.WriteLine("enter the amount you want to withdraw  :");
+                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during deposit: {ex.Message}");
+            }
+        }
+
+        static void WithDraw()
+        {
+            try
+            {
+                Console.WriteLine("Enter the amount you want to withdraw:");
                 double withdrawamount = Convert.ToDouble(Console.ReadLine());
                 int index = accountnumbers.IndexOf(lastaccountnumber);
-                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)//so i create a limit for ittt ">="
+                if (index == -1)
+                {
+                    Console.WriteLine("Account not found.");
+                    return;
+                }
+                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)
                 {
                     accountbalances[index] -= withdrawamount;
-                    Console.WriteLine("withdraw successful. New balance: " + accountbalances[index]);
+                    Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);
                 }
                 else
                 {
-                    Console.WriteLine(" =( i guess you're poor ...");
+                    Console.WriteLine("Insufficient balance.");
                 }
-
             }
-            static void Checkbalance()
+            catch (FormatException)
             {
-                Console.WriteLine("enter your account number :");
+                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during withdrawal: {ex.Message}");
+            }
+        }
+
+        static void Checkbalance()
+        {
+            try
+            {
+                Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
                 if (accountnumbers.Contains(accountnumber))
                 {
-                    // Find the index of the account number in the list
                     int index = accountnumbers.IndexOf(accountnumber);
-                    // Display the balance at the found index
                     Console.WriteLine("Your balance is: " + accountbalances[index]);
                 }
                 else
                 {
-                    Console.WriteLine("wrong account number inserted ..."); //if false ...
+                    Console.WriteLine("Wrong account number inserted.");
                 }
-
             }
-            static void SaveAccountsinformationfile()
+            catch (FormatException)
             {
-                // Save account information to a file
+                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
+            }
+        }
+
+        static void SaveAccountsinformationfile()
+        {
+            try
+            {
                 using (StreamWriter writer = new StreamWriter(accountsFilePath))
                 {
                     for (int i = 0; i < accountnumbers.Count; i++)
@@ -170,317 +235,138 @@
                     }
                 }
             }
-            static void ReviewAccountinformationfile() //stream reader 
+            catch (Exception ex)
             {
-                // Check if the accounts file exists
+                Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
+            }
+        }
+
+        static void ReviewAccountinformationfile()
+        {
+            try
+            {
                 if (File.Exists(accountsFilePath))
                 {
-                    // Open the file for reading using a StreamReader
                     using (StreamReader reader = new StreamReader(accountsFilePath))
                     {
                         string line;
-                        // Read each line from the file until the end
                         while ((line = reader.ReadLine()) != null)
                         {
-                            // Split the line into parts using a comma as the delimiter
                             string[] parts = line.Split(',');
-                            // Ensure the line has exactly three parts (account number, name, balance)
                             if (parts.Length == 3)
                             {
-                                // Parse and add the account number to the accountnumbers list
-                                accountnumbers.Add(int.Parse(parts[0])); //123
-                                // Add the account name to the accountnames list
+                                accountnumbers.Add(int.Parse(parts[0]));
                                 accountnames.Add(parts[1]);
-                                // Parse and add the account balance to the accountbalances list
                                 accountbalances.Add(double.Parse(parts[2]));
                             }
                         }
                     }
                 }
             }
+            catch (FormatException)
             {
-
+                Console.WriteLine("Error parsing account information. Please check the file format.");
             }
-            static void SubmitReview() // i will submit my review wil use stack..
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while reviewing account information: {ex.Message}");
+            }
+        }
+
+        static void SubmitReview()
+        {
+            try
             {
                 Console.WriteLine("Enter your review:");
                 string? review = Console.ReadLine();
-                reviews.Push(review);//push the last in the stack ((out))
+                if (string.IsNullOrWhiteSpace(review))
+                {
+                    Console.WriteLine("Review cannot be empty.");
+                    return;
+                }
+                reviews.Push(review);
                 Console.WriteLine("Review submitted successfully.");
             }
+            catch (Exception ex)
             {
-
+                Console.WriteLine($"An error occurred while submitting the review: {ex.Message}");
             }
-            static void ReviewRequest() //will be using queue.. 
+        }
+
+        static void ReviewRequest()
+        {
+            try
             {
-                // Check if there are any account opening requests in the queue
-                if (RequestAccountOpeningQueue.Count > 0) // Count must be in capital "Count"
+                if (RequestAccountOpeningQueue.Count > 0)
                 {
                     Console.WriteLine("Reviewing account opening requests:");
-
-                    // Iterate through all requests in the queue and display them
-                    foreach (var request in RequestAccountOpeningQueue) // Queue<string> supports enumeration
+                    foreach (var request in RequestAccountOpeningQueue)
                     {
-                        // Display each request
                         Console.WriteLine(request);
                     }
-
-                    // Dequeue the first request after reviewing
                     string reviewedRequest = RequestAccountOpeningQueue.Dequeue();
                     Console.WriteLine("Reviewed request: " + reviewedRequest);
                 }
                 else
                 {
-                    // If no requests are present, display a message
                     Console.WriteLine("No requests to review.");
                 }
             }
-            static void ViewAccounts() //VIEW ACCOUNT 
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while reviewing requests: {ex.Message}");
+            }
+        }
+
+        static void ViewAccounts()
+        {
+            try
             {
                 Console.WriteLine("==========ALL ACCOUNTS==========");
-                // Iterate through all accounts and display their information
                 for (int i = 0; i < accountnumbers.Count; i++)
                 {
                     Console.WriteLine($"Account Number: {accountnumbers[i]}, Name: {accountnames[i]}, Balance: {accountbalances[i]}");
                 }
-
             }
-            static void ViewReviews()
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while viewing accounts: {ex.Message}");
+            }
+        }
+
+        static void ViewReviews()
+        {
+            try
             {
                 Console.WriteLine("==========ALL REVIEWS==========");
                 foreach (var review in reviews)
                 {
                     Console.WriteLine(review);
                 }
-                // Check if there are any reviews in the stack
-                Console.WriteLine(Console.ReadLine());
-
             }
-            static void ProcessRequests() // Process account opening requests
+            catch (Exception ex)
             {
-                // Check if there are any requests in the queue
+                Console.WriteLine($"An error occurred while viewing reviews: {ex.Message}");
+            }
+        }
+
+        static void ProcessRequests()
+        {
+            try
+            {
                 if (RequestAccountOpeningQueue.Count > 0)
                 {
-                    // Dequeue the first request and process it
                     string request = RequestAccountOpeningQueue.Dequeue();
-                    //[// Display the request being processed]
-                    static void Main()
-                    {
-                        try
-                        {
-                            SaveAccountsinformationfile();
-                            ReviewAccountinformationfile();
-
-                            // Load account information from the file
-                            bool processing = true;
-                            while (processing)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
-                                Console.WriteLine("1. USERMENU ");
-                                Console.WriteLine("2. ADMINMENU ");
-                                Console.WriteLine("0. EXIT");
-                                Console.Write("SELECT OPTION :");
-                                string? choice = Console.ReadLine();
-                                switch (choice)
-                                {
-                                    case "1": UserMenu(); break;
-                                    case "2": AdminMenu(); break;
-                                    case "0": processing = false; break;
-                                    default: Console.WriteLine("Invalid choice, please try again."); break;
-                                }
-                                Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-                        }
-                    }
-
-                    static void Deposit() //why we need index?
-                    { //we need account number ...
-                        try
-                        {
-                            Console.WriteLine("enter your account number :");
-                            int accountnumber = Convert.ToInt32(Console.ReadLine());
-                            if (accountnumbers.Contains(accountnumber))
-                            {
-                                Console.WriteLine("enter the amount you want to deposit :");
-                                double depositamount = Convert.ToDouble(Console.ReadLine());
-                                // Find the index of the account number in the list
-                                int index = accountnumbers.IndexOf(accountnumber);
-                                // Add the deposit amount to the account balance at the found index
-                                accountbalances[index] += depositamount;
-                                // Display a success message with the updated balance
-                                Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
-                            }
-                            else
-                            {
-                                Console.WriteLine("wrong account number inserted ..."); //if false ...
-                            }
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred during deposit: {ex.Message}");
-                        }
-                    }
-
-                    static void WithDraw() //if i want withdraw my moneyyy
-                    {
-                        try
-                        {
-                            Console.WriteLine("enter the amount you want to withdraw  :");
-                            double withdrawamount = Convert.ToDouble(Console.ReadLine());
-                            int index = accountnumbers.IndexOf(lastaccountnumber);
-                            if (index == -1)
-                            {
-                                Console.WriteLine("Account not found.");
-                                return;
-                            }
-                            if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE) //so i create a limit for ittt ">="
-                            {
-                                accountbalances[index] -= withdrawamount;
-                                Console.WriteLine("withdraw successful. New balance: " + accountbalances[index]);
-                            }
-                            else
-                            {
-                                Console.WriteLine(" =( i guess you're poor ...");
-                            }
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred during withdrawal: {ex.Message}");
-                        }
-                    }
-
-                    static void Checkbalance()
-                    {
-                        try
-                        {
-                            Console.WriteLine("enter your account number :");
-                            int accountnumber = Convert.ToInt32(Console.ReadLine());
-                            if (accountnumbers.Contains(accountnumber))
-                            {
-                                // Find the index of the account number in the list
-                                int index = accountnumbers.IndexOf(accountnumber);
-                                // Display the balance at the found index
-                                Console.WriteLine("Your balance is: " + accountbalances[index]);
-                            }
-                            else
-                            {
-                                Console.WriteLine("wrong account number inserted ..."); //if false ...
-                            }
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
-                        }
-                    }
-
-                    static void SaveAccountsinformationfile()
-                    {
-                        try
-                        {
-                            // Save account information to a file
-                            using (StreamWriter writer = new StreamWriter(accountsFilePath))
-                            {
-                                for (int i = 0; i < accountnumbers.Count; i++)
-                                {
-                                    writer.WriteLine($"{accountnumbers[i]},{accountnames[i]},{accountbalances[i]}");
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
-                        }
-                    }
-
-                    static void ReviewAccountinformationfile() //stream reader 
-                    {
-                        try
-                        {
-                            // Check if the accounts file exists
-                            if (File.Exists(accountsFilePath))
-                            {
-                                // Open the file for reading using a StreamReader
-                                using (StreamReader reader = new StreamReader(accountsFilePath))
-                                {
-                                    string line;
-                                    // Read each line from the file until the end
-                                    while ((line = reader.ReadLine()) != null)
-                                    {
-                                        // Split the line into parts using a comma as the delimiter
-                                        string[] parts = line.Split(',');
-                                        // Ensure the line has exactly three parts (account number, name, balance)
-                                        if (parts.Length == 3)
-                                        {
-                                            // Parse and add the account number to the accountnumbers list
-                                            accountnumbers.Add(int.Parse(parts[0])); //123
-                                            // Add the account name to the accountnames list
-                                            accountnames.Add(parts[1]);
-                                            // Parse and add the account balance to the accountbalances list
-                                            accountbalances.Add(double.Parse(parts[2]));
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Error parsing account information. Please check the file format.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred while reviewing account information: {ex.Message}");
-                        }
-                    }
-
-                    static void SubmitReview() // i will submit my review wil use stack..
-                    {
-                        try
-                        {
-                            Console.WriteLine("Enter your review:");
-                            string? review = Console.ReadLine();
-                            if (string.IsNullOrWhiteSpace(review))
-                            {
-                                Console.WriteLine("Review cannot be empty.");
-                                return;
-                            }
-                            reviews.Push(review); //push the last in the stack ((out))
-                            Console.WriteLine("Review submitted successfully.");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"An error occurred while submitting the review: {ex.Message}");
-                        }
-                    }
                     Console.WriteLine("Processing request: " + request);
-
-                    // Here you can add code to create an account based on the request
-                    // For example, parse the request details and generate a new account
                 }
                 else
                 {
-                    // If no requests are present, display a message
                     Console.WriteLine("No requests to process.");
                 }
             }
+            catch (Exception ex)
             {
-
+                Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
             }
         }
     }

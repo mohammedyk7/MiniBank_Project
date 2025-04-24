@@ -236,7 +236,7 @@
                 // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))
                 {
-                    int index = accountnumbers.IndexOf(accountnumber);
+                    int index = accountnumbers.IndexOf(accountnumber);//If the value is found, IndexOf returns the zero-based index of the first match.
                     Console.WriteLine("Your balance is: " + accountbalances[index]);
                 }
                 else

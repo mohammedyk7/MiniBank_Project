@@ -168,7 +168,7 @@
                     double depositamount = Convert.ToDouble(Console.ReadLine());
 
                     // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber);
+                    int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
                     accountbalances[index] += depositamount;
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }

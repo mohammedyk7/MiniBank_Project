@@ -260,6 +260,10 @@
                 Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
             }
         }
+        static void TransactionHistory() 
+        {
+
+        }
 
         // Saves account information to a file
         static void SaveAccountsinformationfile()
@@ -280,6 +284,7 @@
                 Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
             }
         }
+        
 
         // Loads account information from a file
         static void ReviewAccountinformationfile()
@@ -341,7 +346,7 @@
         }
 
         // Reviews account opening requests
-        static void ReviewRequest()
+        static void ReviewRequest()//check if the account is not empty 
         {
             try
             {

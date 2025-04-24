@@ -203,7 +203,7 @@
                     Console.WriteLine("Account not found.");
                     return;
                 }
-                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)
+                if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)//SO THAT IT DOEST GO BELOW MINIMUM BALANCE 
                 {
                     accountbalances[index] -= withdrawamount;
                     Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);

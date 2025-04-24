@@ -199,11 +199,7 @@
 
                 // Find the account and check if withdrawal is possible
                 int index = accountnumbers.IndexOf(lastaccountnumber);//If found, it gives you the position (index) of that account.
-                if (index == -1)// not found in the list [-----] (list)
-                {
-                    Console.WriteLine("Account not found.");
-                    return;
-                }
+                if (index == -1)//if not  found in the list
                 {
                     Console.WriteLine("Account not found.");
                     return;

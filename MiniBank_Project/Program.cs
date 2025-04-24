@@ -24,6 +24,7 @@
             {
                 // Load account information from the file
                 ReviewAccountinformationfile();
+                SaveAccountsinformationfile();
 
                 bool processing = true;
                 while (processing)

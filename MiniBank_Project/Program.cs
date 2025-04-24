@@ -11,7 +11,7 @@
 
         // Lists
          static List<int> accountnumbers = new List<int>();
-        private static List<string> accountnames = new List<string>();
+         static List<string> accountnames = new List<string>();
         private static List<double> accountbalances = new List<double>();
 
         // Queues and Stacks

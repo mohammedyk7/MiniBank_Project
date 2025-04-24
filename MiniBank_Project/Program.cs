@@ -143,7 +143,7 @@
                 string? nationalID = Console.ReadLine();
 
                 // Add the request to the queue
-                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);
+                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);//LIKE A LINE OF PEOPLE WAITING FOR THE BANK TO OPEN THEIR ACCOUNT
             }
             catch (Exception ex)
             {

@@ -201,7 +201,7 @@
                 if (accountnumbers.Contains(accountnumber))
                 {
                     Console.WriteLine("Enter the amount you want to withdraw:");
-                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
+                    double withdrawamount = Convert.ToDouble(Console.ReadLine());//cant be integer 
 
                     int index = accountnumbers.IndexOf(accountnumber);//creating index to integrate account number in the index
 

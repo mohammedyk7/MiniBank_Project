@@ -4,7 +4,7 @@
     {
         // Constants
          const double MINIMUM_BALANCE = 100.0;
-        private const string accountsFilePath = "accounts.txt";
+         const string accountsFilePath = "accounts.txt";
 
         // Global Variables
         static int lastaccountnumber = 0;

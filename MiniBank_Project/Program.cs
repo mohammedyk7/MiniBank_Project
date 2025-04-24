@@ -264,11 +264,11 @@
                 Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
             }
         }
-        static void transactionHistory() 
+        
         {
             //i need account numbers,names,balances, and transaction history
             // i need deposits
-            static void ViewTransactionHistory()
+            static void TransactionHistory()
             {
                 try
                 {
@@ -279,11 +279,14 @@
                     else
                     {
                         Console.WriteLine("Transaction History:");
-                        foreach (string transaction in transactionHistory)
-                        {
-                            Console.WriteLine(transaction);
-                        }
+                        foreach (string transaction in transactionHistory) //foreach index ..
+                    {
+                        // Display each transaction
+                        Console.WriteLine(transaction);
                     }
+
+                    }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -424,7 +427,7 @@
         {
             try
             {
-                Console.WriteLine("==========ALL REVIEWS==========");
+                Console.WriteLine("========== ALL REVIEWS ==========");
                 foreach (var review in reviews)
                 {
                     Console.WriteLine(review);

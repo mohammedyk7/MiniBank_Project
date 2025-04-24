@@ -201,7 +201,7 @@
                     Console.WriteLine("Enter the amount you want to withdraw:");
                     double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
-                    int index = accountnumbers.IndexOf(accountnumber);
+                    int index = accountnumbers.IndexOf(accountnumber);//[accountnumber:1234]
 
                     if (accountbalances[index] >= withdrawamount)
                     {

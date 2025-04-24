@@ -234,7 +234,7 @@
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))
+                if (accountnumbers.Contains(accountnumber))//check if it exists in the list 
                 {
                     int index = accountnumbers.IndexOf(accountnumber);//If the value is found, IndexOf returns the zero-based index[0][1]..etc of the first match.
                     Console.WriteLine("Your balance is: " + accountbalances[index]);

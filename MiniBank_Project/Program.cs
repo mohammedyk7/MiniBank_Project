@@ -188,7 +188,7 @@
         }
 
         // Handles withdrawing money from an account
-        static void WithDraw()
+        static void WithDraw()//substracting cash 
         {
             try
             {

@@ -3,32 +3,33 @@
     internal class Program
     {
         // Constants
-         const double MINIMUM_BALANCE = 100.0;
-         const string accountsFilePath = "accounts.txt";
+        const double MINIMUM_BALANCE = 100.0; // Minimum balance required in an account
+        const string accountsFilePath = "accounts.txt"; // File path to store account information
 
         // Global Variables
-        static int lastaccountnumber = 0;
+        static int lastaccountnumber = 0; // Tracks the last assigned account number
 
-        // Lists
-         static List<int> accountnumbers = new List<int>();
-         static List<string> accountnames = new List<string>();
-         static List<double> accountbalances = new List<double>();
+        // Lists to store account details
+        static List<int> accountnumbers = new List<int>(); // Stores account numbers
+        static List<string> accountnames = new List<string>(); // Stores account holder names
+        static List<double> accountbalances = new List<double>(); // Stores account balances
 
-        // Queues and Stacks
-         static Queue<string> RequestAccountOpeningQueue = new Queue<string>();
-         static Stack<string> reviews = new Stack<string>();
+        // Queue for account opening requests and stack for reviews
+        static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Stores account opening requests
+        static Stack<string> reviews = new Stack<string>(); // Stores user reviews
 
         static void Main()
         {
             try
             {
+                // Load account information from the file
                 SaveAccountsinformationfile();
                 ReviewAccountinformationfile();
 
-                // Load account information from the file
                 bool processing = true;
                 while (processing)
                 {
+                    // Display the main menu
                     Console.Clear();
                     Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
                     Console.WriteLine("1. USERMENU ");
@@ -36,11 +37,13 @@
                     Console.WriteLine("0. EXIT");
                     Console.Write("SELECT OPTION :");
                     string? choice = Console.ReadLine();
+
+                    // Handle user choice
                     switch (choice)
                     {
-                        case "1": UserMenu(); break;
-                        case "2": AdminMenu(); break;
-                        case "0": processing = false; break;
+                        case "1": UserMenu(); break; // Navigate to User Menu
+                        case "2": AdminMenu(); break; // Navigate to Admin Menu
+                        case "0": processing = false; break; // Exit the application
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
                     Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
@@ -48,10 +51,12 @@
             }
             catch (Exception ex)
             {
+                // Handle unexpected errors
                 Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             }
         }
 
+        // Displays the User Menu and handles user actions
         static void UserMenu()
         {
             try
@@ -69,14 +74,16 @@
                     Console.WriteLine("0. Back to Main Menu");
                     Console.Write("SELECT OPTION :");
                     string choice = Console.ReadLine();
+
+                    // Handle user choice
                     switch (choice)
                     {
-                        case "1": RequestAccountOpening(); break;
-                        case "2": Deposit(); break;
-                        case "3": WithDraw(); break;
-                        case "4": Checkbalance(); break;
-                        case "5": SubmitReview(); break;
-                        case "0": enteringmenu = false; break;
+                        case "1": RequestAccountOpening(); break; // Request to open a new account
+                        case "2": Deposit(); break; // Deposit money into an account
+                        case "3": WithDraw(); break; // Withdraw money from an account
+                        case "4": Checkbalance(); break; // Check account balance
+                        case "5": SubmitReview(); break; // Submit a review
+                        case "0": enteringmenu = false; break; // Return to main menu
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
                     Console.WriteLine("Welcome to $afe Bank");
@@ -84,10 +91,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors in the User Menu
                 Console.WriteLine($"An error occurred in the User Menu: {ex.Message}");
             }
         }
 
+        // Displays the Admin Menu and handles admin actions
         static void AdminMenu()
         {
             try
@@ -103,23 +112,27 @@
                     Console.WriteLine("0. Exit");
                     Console.Write("SELECT OPTION :");
                     string? choice = Console.ReadLine();
+
+                    // Handle admin choice
                     switch (choice)
                     {
-                        case "1": ReviewRequest(); break;
-                        case "2": ViewAccounts(); break;
-                        case "3": ViewReviews(); break;
-                        case "4": ProcessRequests(); break;
-                        case "0": insertadmin = false; break;
+                        case "1": ReviewRequest(); break; // Review account opening requests
+                        case "2": ViewAccounts(); break; // View all accounts
+                        case "3": ViewReviews(); break; // View all reviews
+                        case "4": ProcessRequests(); break; // Process account opening requests
+                        case "0": insertadmin = false; break; // Exit Admin Menu
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
                 }
             }
             catch (Exception ex)
             {
+                // Handle errors in the Admin Menu
                 Console.WriteLine($"An error occurred in the Admin Menu: {ex.Message}");
             }
         }
 
+        // Handles account opening requests
         static void RequestAccountOpening()
         {
             try
@@ -128,24 +141,32 @@
                 string? name = Console.ReadLine();
                 Console.WriteLine("National ID:");
                 string? nationalID = Console.ReadLine();
+
+                // Add the request to the queue
                 RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);
             }
             catch (Exception ex)
             {
+                // Handle errors during account opening request
                 Console.WriteLine($"An error occurred while requesting account opening: {ex.Message}");
             }
         }
 
+        // Handles depositing money into an account
         static void Deposit()
         {
             try
             {
                 Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
+
+                // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))
                 {
                     Console.WriteLine("Enter the amount you want to deposit:");
                     double depositamount = Convert.ToDouble(Console.ReadLine());
+
+                    // Update the account balance
                     int index = accountnumbers.IndexOf(accountnumber);
                     accountbalances[index] += depositamount;
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
@@ -157,20 +178,25 @@
             }
             catch (FormatException)
             {
+                // Handle invalid input format
                 Console.WriteLine("Invalid input format. Please enter numeric values where required.");
             }
             catch (Exception ex)
             {
+                // Handle other errors during deposit
                 Console.WriteLine($"An error occurred during deposit: {ex.Message}");
             }
         }
 
+        // Handles withdrawing money from an account
         static void WithDraw()
         {
             try
             {
                 Console.WriteLine("Enter the amount you want to withdraw:");
                 double withdrawamount = Convert.ToDouble(Console.ReadLine());
+
+                // Find the account and check if withdrawal is possible
                 int index = accountnumbers.IndexOf(lastaccountnumber);
                 if (index == -1)
                 {
@@ -189,20 +215,25 @@
             }
             catch (FormatException)
             {
+                // Handle invalid input format
                 Console.WriteLine("Invalid input format. Please enter numeric values where required.");
             }
             catch (Exception ex)
             {
+                // Handle other errors during withdrawal
                 Console.WriteLine($"An error occurred during withdrawal: {ex.Message}");
             }
         }
 
+        // Handles checking the balance of an account
         static void Checkbalance()
         {
             try
             {
                 Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
+
+                // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))
                 {
                     int index = accountnumbers.IndexOf(accountnumber);
@@ -215,14 +246,17 @@
             }
             catch (FormatException)
             {
+                // Handle invalid input format
                 Console.WriteLine("Invalid input format. Please enter numeric values where required.");
             }
             catch (Exception ex)
             {
+                // Handle other errors during balance check
                 Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
             }
         }
 
+        // Saves account information to a file
         static void SaveAccountsinformationfile()
         {
             try
@@ -237,10 +271,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during file saving
                 Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
             }
         }
 
+        // Loads account information from a file
         static void ReviewAccountinformationfile()
         {
             try
@@ -265,20 +301,25 @@
             }
             catch (FormatException)
             {
+                // Handle invalid file format
                 Console.WriteLine("Error parsing account information. Please check the file format.");
             }
             catch (Exception ex)
             {
+                // Handle other errors during file reading
                 Console.WriteLine($"An error occurred while reviewing account information: {ex.Message}");
             }
         }
 
+        // Allows users to submit reviews
         static void SubmitReview()
         {
             try
             {
                 Console.WriteLine("Enter your review:");
                 string? review = Console.ReadLine();
+
+                // Validate and add the review to the stack
                 if (string.IsNullOrWhiteSpace(review))
                 {
                     Console.WriteLine("Review cannot be empty.");
@@ -289,10 +330,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during review submission
                 Console.WriteLine($"An error occurred while submitting the review: {ex.Message}");
             }
         }
 
+        // Reviews account opening requests
         static void ReviewRequest()
         {
             try
@@ -314,10 +357,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during request review
                 Console.WriteLine($"An error occurred while reviewing requests: {ex.Message}");
             }
         }
 
+        // Displays all accounts
         static void ViewAccounts()
         {
             try
@@ -330,10 +375,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during account viewing
                 Console.WriteLine($"An error occurred while viewing accounts: {ex.Message}");
             }
         }
 
+        // Displays all reviews
         static void ViewReviews()
         {
             try
@@ -346,10 +393,12 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during review viewing
                 Console.WriteLine($"An error occurred while viewing reviews: {ex.Message}");
             }
         }
 
+        // Processes account opening requests
         static void ProcessRequests()
         {
             try
@@ -366,6 +415,7 @@
             }
             catch (Exception ex)
             {
+                // Handle errors during request processing
                 Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
             }
         }

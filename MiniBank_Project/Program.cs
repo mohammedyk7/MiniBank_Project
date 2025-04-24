@@ -35,6 +35,7 @@
                     Console.WriteLine("2. ADMINMENU ");
                     Console.WriteLine("0. EXIT");
                     Console.Write("SELECT OPTION :");
+                    Console.WriteLine("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                     string? choice = Console.ReadLine();
 
                     // Handle user choice
@@ -423,3 +424,4 @@
             }
         }
     }
+}

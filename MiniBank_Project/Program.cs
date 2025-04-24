@@ -10,7 +10,7 @@
         static int lastaccountnumber = 0;
 
         // Lists
-        private static List<int> accountnumbers = new List<int>();
+         static List<int> accountnumbers = new List<int>();
         private static List<string> accountnames = new List<string>();
         private static List<double> accountbalances = new List<double>();
 

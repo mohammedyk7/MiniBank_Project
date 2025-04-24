@@ -138,12 +138,12 @@
             try
             {
                 Console.WriteLine("Enter your name:");
-                string? name = Console.ReadLine();//VARIABLE CAN BE STRING OR NULL
+                string? Name = Console.ReadLine();//VARIABLE CAN BE STRING OR NULL
                 Console.WriteLine("National ID:");
                 string? nationalID = Console.ReadLine();
 
                 // Add the request to the queue
-                RequestAccountOpeningQueue.Enqueue(name + " === " + nationalID);//LIKE A LINE OF PEOPLE WAITING FOR THE BANK TO OPEN THEIR ACCOUNT
+                RequestAccountOpeningQueue.Enqueue(Name + " === " + nationalID);//LIKE A LINE OF PEOPLE WAITING FOR THE BANK TO OPEN THEIR ACCOUNT
                 //ENQUEUE MEANS TO ADD TO THE END OF THE QUEUE
             }
             catch (Exception ex)

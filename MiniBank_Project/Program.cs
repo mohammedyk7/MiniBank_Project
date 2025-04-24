@@ -138,7 +138,7 @@
             try
             {
                 Console.WriteLine("Enter your name:");
-                string? name = Console.ReadLine();
+                string? name = Console.ReadLine();//VARIABLE CAN BE STRING OR NULL
                 Console.WriteLine("National ID:");
                 string? nationalID = Console.ReadLine();
 

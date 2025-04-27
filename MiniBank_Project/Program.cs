@@ -70,11 +70,12 @@
                     Console.Clear();
                     Console.WriteLine("Welcome to Mini Bank");
                     Console.WriteLine("1. Create Account");
-                    Console.WriteLine("2. Deposit Money");
-                    Console.WriteLine("3. Withdraw Money");
-                    Console.WriteLine("4. Check Balance");
-                    Console.WriteLine("5. Submit Review");
-                    Console.WriteLine("6. View Transaction History");
+                    Console.WriteLine("2.add account number ");
+                    Console.WriteLine("3. Deposit Money");
+                    Console.WriteLine("4. Withdraw Money");
+                    Console.WriteLine("5. Check Balance");
+                    Console.WriteLine("6. Submit Review");
+                    Console.WriteLine("7. View Transaction History");
                     Console.WriteLine("0. Back to Main Menu");
                     Console.Write("SELECT OPTION :");
                     string? choice = Console.ReadLine();
@@ -83,11 +84,12 @@
                     switch (choice)
                     {
                         case "1": RequestAccountOpening(); break; // Request to open a new account
-                        case "2": Deposit(); break; // Deposit money into an account
-                        case "3": WithDraw(); break; // Withdraw money from an account
-                        case "4": Checkbalance(); break; // Check account balance
-                        case "5": SubmitReview(); break; // Submit a review
-                        case "6": TransactionHistory(); break; // View transaction history
+                        case "2": addaccountnumber(); // add account number
+                        case "3": Deposit(); break; // Deposit money into an account
+                        case "4": WithDraw(); break; // Withdraw money from an account
+                        case "5": Checkbalance(); break; // Check account balance
+                        case "6": SubmitReview(); break; // Submit a review
+                        case "7": TransactionHistory(); break; // View transaction history
                         case "0": enteringmenu = false; break; // Return to main menu
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }
@@ -136,6 +138,34 @@
                 Console.WriteLine($"An error occurred in the Admin Menu: {ex.Message}");
             }
         }
+        static void addaccountnumber() 
+        {
+            try
+            {
+           
+                Console.WriteLine("Enter your account number:");
+                int accountnumber = Convert.ToInt32(Console.ReadLine());
+                // Check if the account number already exists
+                if (accountnumbers.Contains(accountnumber))
+                {
+                    Console.WriteLine("Account number already exists.");
+                    return;
+                }
+                // Add the new account number to the list
+                accountnumbers.Add(accountnumber);
+                accountbalances.Add(0.0); // Initialize balance to 0
+                Console.WriteLine("Account number added successfully.");
+            }
+            catch (FormatException)
+            {
+                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
+            }
+            catch (Exception ex)
+            {
+                // Handle errors during account number addition
+                Console.WriteLine($"An error occurred while adding account number: {ex.Message}");
+            }
+        }
 
         // Handles account opening requests
         static void RequestAccountOpening() 
@@ -168,13 +198,15 @@
                 else
                 {
                     Console.WriteLine("No requests to process.");
-                }
+                }         
+
             }
             catch (Exception ex)
             {
                 // Handle errors during request processing
                 Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
             }
+            
         }
 
         // Handles depositing money into an account
@@ -188,7 +220,8 @@
                 // Check if the account exists
                 if (accountnumbers.Contains(accountnumber))// check if the account number is in the list
                 {
-                    Console.WriteLine("Enter the amount you want to deposit:");
+                    Console.WriteLine("Enter the amount you want to deposit:"); 
+                    Console.ReadLine();
                     double depositamount = Convert.ToDouble(Console.ReadLine());
 
                     if (depositamount <= 0)

@@ -77,7 +77,7 @@
                     Console.WriteLine("6. View Transaction History");
                     Console.WriteLine("0. Back to Main Menu");
                     Console.Write("SELECT OPTION :");
-                    string choice = Console.ReadLine();
+                    string? choice = Console.ReadLine();
 
                     // Handle user choice
                     switch (choice)

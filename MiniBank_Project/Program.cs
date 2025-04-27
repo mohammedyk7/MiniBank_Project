@@ -32,7 +32,7 @@
                 while (processing) // while the program is running ..
                 {
                     // Display the main menu
-                    Console.Clear();
+                    Console.Clear(); // Clear the console
                     Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
                     Console.WriteLine("1. USERMENU ");
                     Console.WriteLine("2. ADMINMENU ");

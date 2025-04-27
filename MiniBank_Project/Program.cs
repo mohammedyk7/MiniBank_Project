@@ -163,7 +163,7 @@
                 if (RequestAccountOpeningQueue.Count > 0) // check that the queue is not empty 
                 {
                     string request = RequestAccountOpeningQueue.Dequeue(); // dequeue the request FIFO 
-                    Console.WriteLine("Processing request: " + request);
+                    Console.WriteLine("Processing request: " + request); // process the request
                 }
                 else
                 {

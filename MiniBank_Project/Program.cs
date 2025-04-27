@@ -28,7 +28,7 @@
                 ReviewAccountinformationfile();
                 SaveAccountsinformationfile();
 
-                bool processing = true;
+                bool processing = true; // so that the program keeps processing 
                 while (processing)
                 {
                     // Display the main menu
@@ -64,7 +64,7 @@
         {
             try
             {
-                bool enteringmenu = true;
+                bool enteringmenu = true;// 
                 while (enteringmenu)
                 {
                     Console.Clear();

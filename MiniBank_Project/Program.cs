@@ -186,14 +186,24 @@
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))// if the account numbers exist in the index....
+                if (accountnumbers.Contains(accountnumber))
                 {
                     Console.WriteLine("Enter the amount you want to deposit:");
                     double depositamount = Convert.ToDouble(Console.ReadLine());
 
+                    if (depositamount <= 0)
+                    {
+                        Console.WriteLine("Deposit amount must be greater than zero.");
+                        return;
+                    }
+
                     // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber); //[accountnumber:1234]
+                    int index = accountnumbers.IndexOf(accountnumber);
                     accountbalances[index] += depositamount;
+
+                    // Record the transaction
+                    transactionHistory.Add($"Account {accountnumber}: Deposited {depositamount:C} on {DateTime.Now}"); 
+
                     Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
                 }
                 else
@@ -203,22 +213,20 @@
             }
             catch (FormatException)
             {
-                // Handle invalid input format
                 Console.WriteLine("Invalid input format. Please enter numeric values where required.");
             }
             catch (Exception ex)
             {
-                // Handle other errors during deposit
                 Console.WriteLine($"An error occurred during deposit: {ex.Message}");
             }
         }
 
         // Handles withdrawing money from an account
-        static void WithDraw()//substracting cash 
+        static void WithDraw()
         {
             try
             {
-                Console.WriteLine("================================Enter---Your---Account---Number:==============================");
+                Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
@@ -227,16 +235,26 @@
                     Console.WriteLine("Enter the amount you want to withdraw:");
                     double withdrawamount = Convert.ToDouble(Console.ReadLine());
 
-                    int index = accountnumbers.IndexOf(accountnumber);//[accountnumber:1234]
+                    if (withdrawamount <= 0)
+                    {
+                        Console.WriteLine("Withdraw amount must be greater than zero.");
+                        return;
+                    }
 
-                    if (accountbalances[index] >= withdrawamount)
+                    int index = accountnumbers.IndexOf(accountnumber);
+
+                    if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)
                     {
                         accountbalances[index] -= withdrawamount;
+
+                        // Record the transaction
+                        transactionHistory.Add($"Account {accountnumber}: Withdrew {withdrawamount:C} on {DateTime.Now}");
+
                         Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);
                     }
                     else
                     {
-                        Console.WriteLine("Insufficient balance.");
+                        Console.WriteLine("Insufficient balance. Minimum balance must be maintained.");
                     }
                 }
                 else

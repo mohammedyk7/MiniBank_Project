@@ -126,7 +126,7 @@
                         case "3": ViewReviews(); break; // View all reviews
                         case "4": ProcessRequests(); break; // Process account opening requests
                         case "0": insertadmin = false; break; // Exit Admin Menu
-                        default: Console.WriteLine("Invalid choice, please try again."); break;
+                        default: Console.WriteLine("Invalid choice, please try again."); break; 
                     }
                 }
             }
@@ -138,7 +138,7 @@
         }
 
         // Handles account opening requests
-        static void RequestAccountOpening()
+        static void RequestAccountOpening() 
         {
             try
             {
@@ -148,7 +148,7 @@
                 string? nationalID = Console.ReadLine();
 
                 // Add the request to the queue
-                RequestAccountOpeningQueue.Enqueue(name + " = = = " + nationalID);
+                RequestAccountOpeningQueue.Enqueue(name + " = = = " + nationalID); // enqueue the request 
             }
             catch (Exception ex)
             {

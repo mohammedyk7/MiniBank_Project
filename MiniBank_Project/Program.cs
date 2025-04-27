@@ -186,7 +186,7 @@
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
 
                 // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))
+                if (accountnumbers.Contains(accountnumber))// check if the account number is in the list
                 {
                     Console.WriteLine("Enter the amount you want to deposit:");
                     double depositamount = Convert.ToDouble(Console.ReadLine());
@@ -210,15 +210,19 @@
                 {
                     Console.WriteLine("Wrong account number inserted.");
                 }
+
             }
             catch (FormatException)
             {
                 Console.WriteLine("Invalid input format. Please enter numeric values where required.");
             }
             catch (Exception ex)
+
             {
                 Console.WriteLine($"An error occurred during deposit: {ex.Message}");
             }
+            Console.ReadLine();
+            Console.ReadKey();
         }
 
         // Handles withdrawing money from an account

@@ -156,6 +156,26 @@
                 Console.WriteLine($"An error occurred while requesting account opening: {ex.Message}");
             }
         }
+        static void ProcessRequests()
+        {
+            try
+            {
+                if (RequestAccountOpeningQueue.Count > 0) // check that the queue is not empty 
+                {
+                    string request = RequestAccountOpeningQueue.Dequeue();
+                    Console.WriteLine("Processing request: " + request);
+                }
+                else
+                {
+                    Console.WriteLine("No requests to process.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Handle errors during request processing
+                Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
+            }
+        }
 
         // Handles depositing money into an account
         static void Deposit()
@@ -265,7 +285,7 @@
             }
         }
         
-        {
+        
             //i need account numbers,names,balances, and transaction history
             // i need deposits
             static void TransactionHistory()
@@ -295,7 +315,7 @@
             }
 
 
-        }
+        
 
         // Saves account information to a file
         static void SaveAccountsinformationfile()
@@ -440,26 +460,7 @@
             }
         }
 
-        // Processes account opening requests
-        static void ProcessRequests()
-        {
-            try
-            {
-                if (RequestAccountOpeningQueue.Count > 0)
-                {
-                    string request = RequestAccountOpeningQueue.Dequeue();
-                    Console.WriteLine("Processing request: " + request);
-                }
-                else
-                {
-                    Console.WriteLine("No requests to process.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle errors during request processing
-                Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
-            }
-        }
+  
+       
     }
 }

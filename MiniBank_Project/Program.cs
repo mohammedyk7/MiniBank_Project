@@ -87,7 +87,7 @@
                         case "3": WithDraw(); break; // Withdraw money from an account
                         case "4": Checkbalance(); break; // Check account balance
                         case "5": SubmitReview(); break; // Submit a review
-                        case "6": transactionHistory(); break; // View transaction history
+                        case "6": TransactionHistory(); break; // View transaction history
                         case "0": enteringmenu = false; break; // Return to main menu
                         default: Console.WriteLine("Invalid choice, please try again."); break;
                     }

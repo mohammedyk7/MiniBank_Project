@@ -70,7 +70,7 @@
                     Console.Clear();
                     Console.WriteLine("Welcome to Mini Bank");
                     Console.WriteLine("1. Create Account");
-                    Console.WriteLine("2.add account number ");
+                    Console.WriteLine("2. Add Account Number ");
                     Console.WriteLine("3. Deposit Money");
                     Console.WriteLine("4. Withdraw Money");
                     Console.WriteLine("5. Check Balance");
@@ -84,7 +84,10 @@
                     switch (choice)
                     {
                         case "1": RequestAccountOpening(); break; // Request to open a new account
-                        case "2": addaccountnumber(); // add account number
+                                                                  // : Ensure that each case block ends with a break, return, or other control transfer statement.
+                        case "2":Addaccountnumber();
+                            break; // Add a break statement to prevent fall-through
+                       
                         case "3": Deposit(); break; // Deposit money into an account
                         case "4": WithDraw(); break; // Withdraw money from an account
                         case "5": Checkbalance(); break; // Check account balance
@@ -138,22 +141,34 @@
                 Console.WriteLine($"An error occurred in the Admin Menu: {ex.Message}");
             }
         }
-        static void addaccountnumber() 
+        static void Addaccountnumber()
         {
             try
             {
-           
                 Console.WriteLine("Enter your account number:");
                 int accountnumber = Convert.ToInt32(Console.ReadLine());
+
                 // Check if the account number already exists
                 if (accountnumbers.Contains(accountnumber))
                 {
                     Console.WriteLine("Account number already exists.");
                     return;
                 }
-                // Add the new account number to the list
+
+                Console.WriteLine("Enter the account holder's name:");
+                string? accountname = Console.ReadLine();
+
+                if (string.IsNullOrWhiteSpace(accountname))
+                {
+                    Console.WriteLine("Account holder's name cannot be empty.");
+                    return;
+                }
+
+                // Add the new account number, name, and balance to the lists
                 accountnumbers.Add(accountnumber);
+                accountnames.Add(accountname);
                 accountbalances.Add(0.0); // Initialize balance to 0
+
                 Console.WriteLine("Account number added successfully.");
                 SaveAccountsinformationfile();
             }

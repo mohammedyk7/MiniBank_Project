@@ -173,9 +173,9 @@
         {
             try
             {
-                Console.WriteLine("Enter your name:");
+                Console.WriteLine("Enter your name:"); // get the name of the user
                 string? name = Console.ReadLine();
-                Console.WriteLine("National ID:");
+                Console.WriteLine("National ID:"); // get the national ID of the user
                 string? nationalID = Console.ReadLine();
 
                 // Add the request to the queue

@@ -29,7 +29,7 @@
                 SaveAccountsinformationfile();
 
                 bool processing = true; // so that the program keeps processing 
-                while (processing)
+                while (processing) // while the program is running ..
                 {
                     // Display the main menu
                     Console.Clear();

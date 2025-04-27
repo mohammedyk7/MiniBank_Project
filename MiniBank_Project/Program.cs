@@ -47,7 +47,7 @@
                         case "1": UserMenu(); break; // Navigate to User Menu
                         case "2": AdminMenu(); break; // Navigate to Admin Menu
                         case "0": processing = false; break; // Exit the application
-                        default: Console.WriteLine("Invalid choice, please try again."); break;
+                        default: Console.WriteLine("Invalid choice, please try again."); break; // if the user enters an invalid choice
                     }
                     Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
                 }

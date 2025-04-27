@@ -156,7 +156,7 @@
                 Console.WriteLine($"An error occurred while requesting account opening: {ex.Message}");
             }
         }
-        static void ProcessRequests()
+        static void ProcessRequests() //process the requests
         {
             try
             {

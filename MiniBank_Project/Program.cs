@@ -64,7 +64,7 @@
         {
             try
             {
-                bool enteringmenu = true;// 
+                bool enteringmenu = true; // so that it keeps running ....
                 while (enteringmenu)
                 {
                     Console.Clear();

@@ -155,6 +155,7 @@
                 accountnumbers.Add(accountnumber);
                 accountbalances.Add(0.0); // Initialize balance to 0
                 Console.WriteLine("Account number added successfully.");
+                SaveAccountsinformationfile();
             }
             catch (FormatException)
             {

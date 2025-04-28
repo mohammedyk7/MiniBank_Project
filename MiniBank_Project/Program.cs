@@ -1,537 +1,411 @@
-﻿namespace MiniBank_Project
+﻿﻿using System;
+using System.Collections.Generic;
+using System.IO;
+
+namespace MiniProjectExplanation
 {
-    internal class Program
+    class Program
     {
         // Constants
-        const double MINIMUM_BALANCE = 100.0; // Minimum balance required in an account
-        const string accountsFilePath = "accounts.txt"; // File path to store account information
+        const double MinimumBalance = 100.0;
+        const string AccountsFilePath = "accounts.txt";
+        const string ReviewsFilePath = "reviews.txt";
 
-        // Global Variables
-        static int lastaccountnumber = 0; // Tracks the last assigned account number
+        // Global lists (parallel)
+        static List<int> accountNumbers = new List<int>();
+        static List<string> accountNames = new List<string>();
+        static List<double> balances = new List<double>();
+        //static List<Queue<string>> transactions = new List<Queue<string>>();
+        // Queues and Stacks
+        //static Queue<(string name, string nationalID)> createAccountRequests = new Queue<(string, string)>();
+        static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
+        static Stack<string> reviewsStack = new Stack<string>();
 
-        // Lists to store account details
-        static List<int> accountnumbers = new List<int>(); // Stores account numbers
-        static List<string> accountnames = new List<string>(); // Stores account holder names
-        static List<double> accountbalances = new List<double>(); // Stores account balances
-        static List<string> transactionHistory = new List<string>(); // Stores transaction history
-
-
-        // Queue for account opening requests and stack for reviews
-        static Queue<string> RequestAccountOpeningQueue = new Queue<string>(); // Stores account opening requests
-        static Stack<string> reviews = new Stack<string>(); // Stores user reviews
+        // Account number generator
+        static int lastAccountNumber;
 
         static void Main()
         {
-            try
+            LoadAccountsInformationFromFile();
+            LoadReviews();
+
+            bool running = true;
+
+            while (running)
             {
-                // Load account information from the file
-                ReviewAccountinformationfile();
-                SaveAccountsinformationfile();
+                Console.Clear();
+                Console.WriteLine("\n====== SafeBank System Main Menu ======");
+                Console.WriteLine("1. User Menu");
+                Console.WriteLine("2. Admin Menu");
+                Console.WriteLine("0. Exit");
+                Console.Write("Select option: ");
+                string mainChoice = Console.ReadLine();
 
-                bool processing = true; // so that the program keeps processing 
-                while (processing) // while the program is running ..
+                switch (mainChoice)
                 {
-                    // Display the main menu
-                    Console.Clear(); // Clear the console
-                    Console.WriteLine("=========================$$$WELCOME TO CODELINE-$AFE-BANK$$$=============================");
-                    Console.WriteLine("1. USERMENU ");
-                    Console.WriteLine("2. ADMINMENU ");
-                    Console.WriteLine("0. EXIT");
-                    Console.Write("SELECT OPTION :");
-                    Console.WriteLine("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-                    string? choice = Console.ReadLine();
-
-                    // Handle user choice
-                    switch (choice)
-                    {
-                        case "1": UserMenu(); break; // Navigate to User Menu
-                        case "2": AdminMenu(); break; // Navigate to Admin Menu
-                        case "0": processing = false; break; // Exit the application
-                        default: Console.WriteLine("Invalid choice, please try again."); break; // if the user enters an invalid choice
-                    }
-                    Console.WriteLine("Thank you for using CODELINE $AFE-BANK services ");
+                    case "1": UserMenu(); break;
+                    case "2": AdminMenu(); break;
+                    case "0":
+                        SaveAccountsInformationToFile();
+                        SaveReviews();
+                        running = false;
+                        break;
+                    default: Console.WriteLine("Invalid choice."); break;
                 }
             }
-            catch (Exception ex)
-            {
-                // Handle unexpected errors
-                Console.WriteLine($"An unexpected error occurred: {ex.Message}");
-            }
-        }
 
-        // Displays the User Menu and handles user actions
-        static void UserMenu()
-        {
-            try
-            {
-                bool enteringmenu = true; // so that it keeps running ....
-                while (enteringmenu)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Welcome to Mini Bank");
-                    Console.WriteLine("1. Create Account");
-                    Console.WriteLine("2. Add Account Number ");
-                    Console.WriteLine("3. Deposit Money");
-                    Console.WriteLine("4. Withdraw Money");
-                    Console.WriteLine("5. Check Balance");
-                    Console.WriteLine("6. Submit Review");
-                    Console.WriteLine("7. View Transaction History");
-                    Console.WriteLine("0. Back to Main Menu");
-                    Console.Write("SELECT OPTION :");
-                    string? choice = Console.ReadLine();
-
-                    // Handle user choice
-                    switch (choice)
-                    {
-                        case "1": RequestAccountOpening(); break; // Request to open a new account
-                                                                  // : Ensure that each case block ends with a break, return, or other control transfer statement.
-                        case "2":Addaccountnumber();
-                            break; // Add a break statement to prevent fall-through
-                       
-                        case "3": Deposit(); break; // Deposit money into an account
-                        case "4": WithDraw(); break; // Withdraw money from an account
-                        case "5": Checkbalance(); break; // Check account balance
-                        case "6": SubmitReview(); break; // Submit a review
-                        case "7": TransactionHistory(); break; // View transaction history
-                        case "0": enteringmenu = false; break; // Return to main menu
-                        default: Console.WriteLine("Invalid choice, please try again."); break;
-                    }
-                    Console.WriteLine("Welcome to $afe Bank");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle errors in the User Menu
-                Console.WriteLine($"An error occurred in the User Menu: {ex.Message}");
-            }
-        }
-
-        // Displays the Admin Menu and handles admin actions
-        static void AdminMenu()
-        {
-            try
-            {
-                bool insertadmin = true;//so that it keeps running....
-                while (insertadmin)//while the program is running ...
-                {
-                    Console.WriteLine("Welcome to Mini Bank Admin");
-                    Console.WriteLine("1. Review Requests");
-                    Console.WriteLine("2. View Accounts");
-                    Console.WriteLine("3. View Reviews");
-                    Console.WriteLine("4. Process Requests");
-                    Console.WriteLine("0. Exit");
-                    Console.Write("SELECT OPTION :");
-                    string? choice = Console.ReadLine();
-
-                    // Handle admin choice
-                    switch (choice)
-                    {
-                        case "1": ReviewRequest(); break; // Review account opening requests
-                        case "2": ViewAccounts(); break; // View all accounts
-                        case "3": ViewReviews(); break; // View all reviews
-                        case "4": ProcessRequests(); break; // Process account opening requests
-                        case "0": insertadmin = false; break; // Exit Admin Menu
-                        default: Console.WriteLine("Invalid choice, please try again."); break; 
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle errors in the Admin Menu
-                Console.WriteLine($"An error occurred in the Admin Menu: {ex.Message}");
-            }
-        }
-        static void Addaccountnumber()
-        {
-            try
-            {
-                Console.WriteLine("Enter your account number:");
-                int accountnumber = Convert.ToInt32(Console.ReadLine());
-
-                // Check if the account number already exists
-                if (accountnumbers.Contains(accountnumber))
-                {
-                    Console.WriteLine("Account number already exists.");
-                    return;
-                }
-
-                Console.WriteLine("Enter the account holder's name:");
-                string? accountname = Console.ReadLine();
-
-                if (string.IsNullOrWhiteSpace(accountname))
-                {
-                    Console.WriteLine("Account holder's name cannot be empty.");
-                    return;
-                }
-
-                // Add the new account number, name, and balance to the lists
-                accountnumbers.Add(accountnumber);
-                accountnames.Add(accountname);
-                accountbalances.Add(0.0); // Initialize balance to 0
-
-                Console.WriteLine("Account number added successfully.");
-                SaveAccountsinformationfile();
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-            }
-            catch (Exception ex)
-            {
-                // Handle errors during account number addition
-                Console.WriteLine($"An error occurred while adding account number: {ex.Message}");
-            }
-        }
-
-        // Handles account opening requests
-        static void RequestAccountOpening() 
-        {
-            try
-            {
-                Console.WriteLine("Enter your name:"); // get the name of the user
-                string? name = Console.ReadLine();
-                Console.WriteLine("National ID:"); // get the national ID of the user
-                string? nationalID = Console.ReadLine();
-
-                // Add the request to the queue
-                RequestAccountOpeningQueue.Enqueue(name + " = = = " + nationalID); // enqueue the request 
-            }
-            catch (Exception ex)
-            {
-                // Handle errors during account opening request
-                Console.WriteLine($"An error occurred while requesting account opening: {ex.Message}");
-            }
-        }
-        static void ProcessRequests() //process the requests
-        {
-            try
-            {
-                if (RequestAccountOpeningQueue.Count > 0) // check that the queue is not empty 
-                {
-                    string request = RequestAccountOpeningQueue.Dequeue(); // dequeue the request FIFO 
-                    Console.WriteLine("Processing request: " + request); // process the request
-                }
-                else
-                {
-                    Console.WriteLine("No requests to process.");
-                }         
-
-            }
-            catch (Exception ex)
-            {
-                // Handle errors during request processing
-                Console.WriteLine($"An error occurred while processing requests: {ex.Message}");
-            }
-            
-        }
-
-        // Handles depositing money into an account
-        static void Deposit()
-        {
-            try
-            {
-                Console.WriteLine("Enter your account number:");
-                int accountnumber = Convert.ToInt32(Console.ReadLine());
-
-                // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))// check if the account number is in the list
-                {
-                    Console.WriteLine("Enter the amount you want to deposit:"); 
-                    Console.ReadLine();
-                    double depositamount = Convert.ToDouble(Console.ReadLine());
-
-                    if (depositamount <= 0)
-                    {
-                        Console.WriteLine("Deposit amount must be greater than zero.");
-                        return;
-                    }
-
-                    // Update the account balance
-                    int index = accountnumbers.IndexOf(accountnumber);
-                    accountbalances[index] += depositamount;
-
-                    // Record the transaction
-                    transactionHistory.Add($"Account {accountnumber}: Deposited {depositamount:C} on {DateTime.Now}"); 
-
-                    Console.WriteLine("Deposit successful. New balance: " + accountbalances[index]);
-                }
-                else
-                {
-                    Console.WriteLine("Wrong account number inserted.");
-                }
-
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-            }
-            catch (Exception ex)
-
-            {
-                Console.WriteLine($"An error occurred during deposit: {ex.Message}");
-            }
-            Console.ReadLine();
+            Console.WriteLine("Thank you for using SafeBank!");
             Console.ReadKey();
         }
 
-        // Handles withdrawing money from an account
-        static void WithDraw()
+        // ========== USER MENU ==========
+        static void UserMenu()
         {
-            try
-            {
-                Console.WriteLine("Enter your account number:");
-                int accountnumber = Convert.ToInt32(Console.ReadLine());
+            bool inUserMenu = true;
 
-                // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))
+            while (inUserMenu)
+            {
+                Console.Clear();
+                Console.WriteLine("\n------ User Menu ------");
+                Console.WriteLine("1. Request Account Creation");
+                Console.WriteLine("2. Deposit");
+                Console.WriteLine("3. Withdraw");
+                Console.WriteLine("4. View Balance");
+                Console.WriteLine("5. Submit Review/Complaint");
+                Console.WriteLine("0. Return to Main Menu");
+                Console.Write("Select option: ");
+                string userChoice = Console.ReadLine();
+
+                switch (userChoice)
                 {
-                    Console.WriteLine("Enter the amount you want to withdraw:");
-                    double withdrawamount = Convert.ToDouble(Console.ReadLine());
-
-                    if (withdrawamount <= 0)
-                    {
-                        Console.WriteLine("Withdraw amount must be greater than zero.");
-                        return;
-                    }
-
-                    int index = accountnumbers.IndexOf(accountnumber);
-
-                    if (accountbalances[index] - withdrawamount >= MINIMUM_BALANCE)
-                    {
-                        accountbalances[index] -= withdrawamount;
-
-                        // Record the transaction
-                        transactionHistory.Add($"Account {accountnumber}: Withdrew {withdrawamount:C} on {DateTime.Now}");
-
-                        Console.WriteLine("Withdraw successful. New balance: " + accountbalances[index]);
-                    }
-                    else
-                    {
-                        Console.WriteLine("Insufficient balance. Minimum balance must be maintained.");
-                    }
+                    case "1": RequestAccountCreation(); break;
+                    case "2": Deposit(); break;
+                    case "3": Withdraw(); break;
+                    case "4": ViewBalance(); break;
+                    case "5": SubmitReview(); break;
+                    case "0": inUserMenu = false; break;
+                    default: Console.WriteLine("Invalid choice."); break;
                 }
-                else
-                {
-                    Console.WriteLine("Wrong account number inserted.");
-                }
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Invalid input. Please enter numbers only.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Something went wrong: " + ex.Message);
+                Console.ReadKey();
             }
         }
 
-        // Handles checking the balance of an account
-        static void Checkbalance()
+        // ========== ADMIN MENU ==========
+        static void AdminMenu()
         {
-            try
-            {
-                Console.WriteLine("Enter your account number:");
-                int accountnumber = Convert.ToInt32(Console.ReadLine());
+            bool inAdminMenu = true;
 
-                // Check if the account exists
-                if (accountnumbers.Contains(accountnumber))
-                {
-                    int index = accountnumbers.IndexOf(accountnumber);
-                    Console.WriteLine("Your balance is: " + accountbalances[index]);
-                }
-                else
-                {
-                    Console.WriteLine("Wrong account number inserted.");
-                }
-            }
-            catch (FormatException)
+            while (inAdminMenu)
             {
-                // Handle invalid input format
-                Console.WriteLine("Invalid input format. Please enter numeric values where required.");
-            }
-            catch (Exception ex)
-            {
-                // Handle other errors during balance check
-                Console.WriteLine($"An error occurred while checking balance: {ex.Message}");
-            }
-        }
-        
-        
-            //i need account numbers,names,balances, and transaction history
-            // i need deposits
-            static void TransactionHistory()
-            {
-                try
-                {
-                    if (transactionHistory.Count == 0)
-                    {
-                        Console.WriteLine("No transactions have been made yet.");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Transaction History:");
-                        foreach (string transaction in transactionHistory) //foreach index ..
-                    {
-                        // Display each transaction
-                        Console.WriteLine(transaction);
-                    }
+                Console.Clear();
+                Console.WriteLine("\n------ Admin Menu ------");
+                Console.WriteLine("1. Process Next Account Request");
+                Console.WriteLine("2. View Submitted Reviews");
+                Console.WriteLine("3. View All Accounts");
+                Console.WriteLine("4. View Pending Account Requests");
+                Console.WriteLine("0. Return to Main Menu");
+                Console.Write("Select option: ");
+                string adminChoice = Console.ReadLine();
 
-                    }
-                    
-                }
-                catch (Exception ex)
+                switch (adminChoice)
                 {
-                    Console.WriteLine("Error while viewing transaction history: " + ex.Message);
+                    case "1": ProcessNextAccountRequest(); break;
+                    case "2": ViewReviews(); break;
+                    case "3": ViewAllAccounts(); break;
+                    case "4": ViewPendingRequests(); break;
+                    case "0": inAdminMenu = false; break;
+                    default: Console.WriteLine("Invalid choice."); break;
                 }
-            }
-
-
-        
-
-        // Saves account information to a file
-        static void SaveAccountsinformationfile()
-        {
-            try
-            {
-                using (StreamWriter writer = new StreamWriter(accountsFilePath))
-                {
-                    for (int i = 0; i < accountnumbers.Count; i++)
-                    {
-                        writer.WriteLine($"{accountnumbers[i]},{accountnames[i]},{accountbalances[i]}");
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Handle errors during file saving
-                Console.WriteLine($"An error occurred while saving account information: {ex.Message}");
-            }
-        }
-        
-
-        // Loads account information from a file
-        static void ReviewAccountinformationfile()
-        {
-            try
-            {
-                if (File.Exists(accountsFilePath))
-                {
-                    using (StreamReader reader = new StreamReader(accountsFilePath))
-                    {
-                        string line;
-                        while ((line = reader.ReadLine()) != null)
-                        {
-                            string[] parts = line.Split(',');
-                            if (parts.Length == 3)
-                            {
-                                accountnumbers.Add(int.Parse(parts[0]));
-                                accountnames.Add(parts[1]);
-                                accountbalances.Add(double.Parse(parts[2]));
-                            }
-                        }
-                    }
-                }
-            }
-            catch (FormatException)
-            {
-                // Handle invalid file format
-                Console.WriteLine("Error parsing account information. Please check the file format.");
-            }
-            catch (Exception ex)
-            {
-                // Handle other errors during file reading
-                Console.WriteLine($"An error occurred while reviewing account information: {ex.Message}");
+                Console.ReadKey();
             }
         }
 
-        // Allows users to submit reviews
-        static void SubmitReview()
+
+
+        /// <summary>
+        /// //////////////////////////////////////////////////////////////
+        /// </summary>
+        static void RequestAccountCreation()
         {
+            Console.Write("Enter your full name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Enter your National ID: ");
+            string nationalID = Console.ReadLine();
+
+            string request = name + "|" + nationalID;
+
+            //Queue<string> queue = new Queue<string>();
+            //queue.Enqueue(request);
+
+            //createAccountRequests.Enqueue((name, nationalID));
+            createAccountRequests.Enqueue(request);
+
+            Console.WriteLine("Your account request has been submitted.");
+        }
+
+        static void ProcessNextAccountRequest()
+        {
+            if (createAccountRequests.Count == 0)
+            {
+                Console.WriteLine("No pending account requests.");
+                return;
+            }
+
+            //var (name, nationalID) = createAccountRequests.Dequeue();
+            string request = createAccountRequests.Dequeue();
+            string[] parts = request.Split('|');
+            string name = parts[0];
+            string nationalID = parts[1];
+
+            int newAccountNumber = lastAccountNumber + 1;
+
+            accountNumbers.Add(newAccountNumber);
+            accountNames.Add($"{name} ");
+            balances.Add(0.0);
+
+            lastAccountNumber = newAccountNumber;
+
+            Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
+        }
+
+        static void Deposit()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
             try
             {
-                Console.WriteLine("Enter your review:");
-                string? review = Console.ReadLine();
+                Console.Write("Enter deposit amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
 
-                // Validate and add the review to the stack
-                if (string.IsNullOrWhiteSpace(review))
+                if (amount <= 0)
                 {
-                    Console.WriteLine("Review cannot be empty.");
+                    Console.WriteLine("Amount must be positive.");
                     return;
                 }
-                reviews.Push(review);
-                Console.WriteLine("Review submitted successfully.");
+
+                balances[index] += amount;
+                Console.WriteLine("Deposit successful.");
             }
-            catch (Exception ex)
+            catch
             {
-                // Handle errors during review submission
-                Console.WriteLine($"An error occurred while submitting the review: {ex.Message}");
+                Console.WriteLine("Invalid amount.");
             }
         }
 
-        // Reviews account opening requests
-        static void ReviewRequest()//check if the account is not empty 
+        static void Withdraw()
         {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
             try
             {
-                if (RequestAccountOpeningQueue.Count > 0)//here im checking the queue that its not empty ..
+                Console.Write("Enter withdrawal amount: ");
+                double amount = Convert.ToDouble(Console.ReadLine());
+
+                if (amount <= 0)
                 {
-                    Console.WriteLine("Reviewing account opening requests:");
-                    foreach (var request in RequestAccountOpeningQueue)
-                    {
-                        Console.WriteLine(request);
-                    }
-                    string reviewedRequest = RequestAccountOpeningQueue.Dequeue();
-                    Console.WriteLine("Reviewed request: " + reviewedRequest);
+                    Console.WriteLine("Amount must be positive.");
+                    return;
+                }
+
+                if (balances[index] - amount >= MinimumBalance)
+                {
+                    balances[index] -= amount;
+                    Console.WriteLine("Withdrawal successful.");
                 }
                 else
                 {
-                    Console.WriteLine("No requests to review.");
+                    Console.WriteLine("Insufficient balance after minimum limit.");
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                // Handle errors during request review
-                Console.WriteLine($"An error occurred while reviewing requests: {ex.Message}");
+                Console.WriteLine("Invalid amount.");
             }
         }
 
-        // Displays all accounts
-        static void ViewAccounts()
+        static void ViewBalance()
+        {
+            int index = GetAccountIndex();
+            if (index == -1) return;
+
+            Console.WriteLine($"Account Number: {accountNumbers[index]}");
+            Console.WriteLine($"Holder Name: {accountNames[index]}");
+            Console.WriteLine($"Current Balance: {balances[index]}");
+        }
+
+        static void SaveAccountsInformationToFile()
         {
             try
             {
-                Console.WriteLine("==========ALL ACCOUNTS==========");
-                for (int i = 0; i < accountnumbers.Count; i++)
+                using (StreamWriter writer = new StreamWriter(AccountsFilePath))
                 {
-                    Console.WriteLine($"Account Number: {accountnumbers[i]}, Name: {accountnames[i]}, Balance: {accountbalances[i]}");
+                    for (int i = 0; i < accountNumbers.Count; i++)
+                    {
+                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]}";
+                        writer.WriteLine(dataLine);
+                    }
                 }
+                Console.WriteLine("Accounts saved successfully.");
             }
-            catch (Exception ex)
+            catch
             {
-                // Handle errors during account viewing
-                Console.WriteLine($"An error occurred while viewing accounts: {ex.Message}");
+                Console.WriteLine("Error saving file.");
             }
         }
 
-        // Displays all reviews
+        static void LoadAccountsInformationFromFile()
+        {
+            try
+            {
+                if (!File.Exists(AccountsFilePath))
+                {
+                    Console.WriteLine("No saved data found.");
+                    return;
+                }
+
+                accountNumbers.Clear();
+                accountNames.Clear();
+                balances.Clear();
+                //transactions.Clear();
+
+                using (StreamReader reader = new StreamReader(AccountsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split(',');
+                        int accNum = Convert.ToInt32(parts[0]);
+                        accountNumbers.Add(accNum);
+                        accountNames.Add(parts[1]);
+                        balances.Add(Convert.ToDouble(parts[2]));
+
+                        if (accNum > lastAccountNumber)
+                            lastAccountNumber = accNum;
+                    }
+                }
+
+                Console.WriteLine("Accounts loaded successfully.");
+            }
+            catch
+            {
+                Console.WriteLine("Error loading file.");
+            }
+
+        }
+
+        static void ViewAllAccounts()
+        {
+            Console.WriteLine("\n--- All Accounts ---");
+            for (int i = 0; i < accountNumbers.Count; i++)
+            {
+                Console.WriteLine($"{accountNumbers[i]} - {accountNames[i]} - Balance: {balances[i]}");
+            }
+        }
+
+        static void ViewPendingRequests()
+        {
+            Console.WriteLine("\n--- Pending Account Requests ---");
+            if (createAccountRequests.Count == 0)
+            {
+                Console.WriteLine("No pending requests.");
+                return;
+            }
+
+            foreach (string request in createAccountRequests)
+            {
+                string[] parts = request.Split('|');
+                Console.WriteLine($"Name: {parts[0]}, National ID: {parts[1]}");
+            }
+        }
+
+        static int GetAccountIndex()
+        {
+            Console.Write("Enter account number: ");
+            try
+            {
+                int accNum = Convert.ToInt32(Console.ReadLine());
+                int index = accountNumbers.IndexOf(accNum);
+
+                if (index == -1)
+                {
+                    Console.WriteLine("Account not found.");
+                    return -1;
+                }
+
+                return index;
+            }
+            catch
+            {
+                Console.WriteLine("Invalid input.");
+                return -1;
+            }
+        }
+
+        // ===== Reviews & Complaints (Stack) =====
+
+        static void SubmitReview()
+        {
+            Console.Write("Enter your review or complaint: ");
+            string review = Console.ReadLine();
+            reviewsStack.Push(review);
+            Console.WriteLine("Thank you! Your feedback has been recorded.");
+        }
+
         static void ViewReviews()
         {
-            try
+            if (reviewsStack.Count == 0)
             {
-                Console.WriteLine("========== ALL REVIEWS ==========");
-                foreach (var review in reviews)
-                {
-                    Console.WriteLine(review);
-                }
+                Console.WriteLine("No reviews or complaints submitted yet.");
+                return;
             }
-            catch (Exception ex)
+
+            Console.WriteLine("Recent Reviews/Complaints (most recent first):");
+            foreach (string r in reviewsStack)
             {
-                // Handle errors during review viewing
-                Console.WriteLine($"An error occurred while viewing reviews: {ex.Message}");
+                Console.WriteLine("- " + r);
             }
         }
 
-  
-       
+        static void SaveReviews()
+        {
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(ReviewsFilePath))
+                {
+                    foreach (var review in reviewsStack)
+                    {
+                        writer.WriteLine(review);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error saving reviews.");
+            }
+        }
+
+        static void LoadReviews()
+        {
+            try
+            {
+                if (!File.Exists(ReviewsFilePath)) return;
+
+                using (StreamReader reader = new StreamReader(ReviewsFilePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        reviewsStack.Push(line);
+                    }
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Error loading reviews.");
+            }
+        }
     }
 }

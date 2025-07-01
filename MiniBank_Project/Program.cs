@@ -317,7 +317,7 @@ namespace MiniProjectExplanation
         static void UnlockAccount()
         {
             Console.Write("Enter account number to unlock: ");
-            if (int.TryParse(Console.ReadLine(), out int accNum))
+            if (int.TryParse(Console.ReadLine(), out int accNum)) // use int.TryParse for safe conversion 
             {
                 int index = accountNumbers.IndexOf(accNum);
                 if (index == -1)

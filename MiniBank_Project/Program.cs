@@ -56,8 +56,10 @@ namespace MiniProjectExplanation
             Console.WriteLine();
             return password.ToString();
         }
+        static List<List<string>> transactions = new List<List<string>>(); // Each string: "yyyy-MM-dd,Type,Amount"
 
-        
+
+
         // Account number generator
         static int lastAccountNumber;
 

@@ -111,6 +111,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("3. Withdraw");
                 Console.WriteLine("4. View Balance");
                 Console.WriteLine("5. Submit Review/Complaint");
+                Console.WriteLine("6. Generate Monthly Statement"); // New feature
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string userChoice = Console.ReadLine();
@@ -122,6 +123,8 @@ namespace MiniProjectExplanation
                     case "3": Withdraw(); break;
                     case "4": ViewBalance(); break;
                     case "5": SubmitReview(); break;
+                    case "6": GenerateMonthlyStatement(); break;
+
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
@@ -161,9 +164,7 @@ namespace MiniProjectExplanation
 
 
 
-        /// <summary>
-        /// //////////////////////////////////////////////////////////////
-        /// </summary>
+      
         static void RequestAccountCreation()
         {
             Console.Write("Enter your full name: ");
@@ -207,6 +208,7 @@ namespace MiniProjectExplanation
             balances.Add(0.0);
             passwordHashes.Add(hash);
             nationalIDs.Add(nationalID);
+            transactions.Add(new List<string>());
 
             lastAccountNumber = newAccountNumber;
 
@@ -231,6 +233,8 @@ namespace MiniProjectExplanation
                 }
 
                 balances[index] += amount;
+                string record = $"{DateTime.Now:yyyy-MM-dd},Deposit,{amount}";
+                transactions[index].Add(record);
                 Console.WriteLine("Deposit successful.");
             }
             catch
@@ -258,6 +262,8 @@ namespace MiniProjectExplanation
                 if (balances[index] - amount >= MinimumBalance)
                 {
                     balances[index] -= amount;
+                    string record = $"{DateTime.Now:yyyy-MM-dd},Withdraw,{amount}";
+                    transactions[index].Add(record);
                     Console.WriteLine("Withdrawal successful.");
                 }
                 else
@@ -290,6 +296,8 @@ namespace MiniProjectExplanation
                 {
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
+                      
+                        string tx = string.Join(",", transactions[i]); //join transaction 
                         // Save all fields, separated by comma
                         string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]},{passwordHashes[i]},{nationalIDs[i]}";
                         writer.WriteLine(dataLine);
@@ -319,6 +327,7 @@ namespace MiniProjectExplanation
                 balances.Clear();
                 passwordHashes.Clear();
                 nationalIDs.Clear();
+                transactions.Clear();
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -332,6 +341,10 @@ namespace MiniProjectExplanation
                         balances.Add(Convert.ToDouble(parts[2]));
                         passwordHashes.Add(parts[3]);
                         nationalIDs.Add(parts[4]);
+                        var txList = new List<string>();
+                        if (parts.Length > 5 && !string.IsNullOrEmpty(parts[5]))
+                          txList.AddRange(parts[5].Split(';')); // Assuming transactions are separated by semicolon
+                        transactions.Add(txList);
 
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;
@@ -345,6 +358,41 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error loading file.");
             }
         }
+        // ===== Monthly Statement Generation =====
+        static void GenerateMonthlyStatement()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            Console.Write("Enter year (e.g., 2025): ");
+            if (!int.TryParse(Console.ReadLine(), out int year)) return;
+            Console.Write("Enter month (1-12): ");
+            if (!int.TryParse(Console.ReadLine(), out int month)) return;
+
+            var txs = transactions[index]
+                .Select(tx => tx.Split(','))
+                .Where(parts => DateTime.TryParse(parts[0], out DateTime dt) && dt.Year == year && dt.Month == month)
+                .ToList();
+
+            if (txs.Count == 0)
+            {
+                Console.WriteLine("No transactions for this period.");
+                return;
+            }
+
+            string filename = $"Statement_Acc{accountNumbers[index]}_{year:D4}-{month:D2}.txt";
+            using (StreamWriter writer = new StreamWriter(filename))
+            {
+                writer.WriteLine($"Statement for Account: {accountNumbers[index]} ({accountNames[index]})");
+                writer.WriteLine($"Period: {year}-{month:D2}");
+                writer.WriteLine("Date        | Type     | Amount");
+                writer.WriteLine("-------------------------------");
+                foreach (var tx in txs)
+                    writer.WriteLine($"{tx[0],-11} | {tx[1],-8} | {tx[2]}");
+            }
+            Console.WriteLine($"Statement saved to {filename}");
+        }
+
 
 
         static void ViewAllAccounts()

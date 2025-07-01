@@ -100,9 +100,15 @@ namespace MiniProjectExplanation
                             AdminMenu();
                         break;
 
-                    case "0":
+                    case "0": 
                         SaveAccountsInformationToFile();
                         SaveReviews();
+
+                        Console.Write("Do you want to create a backup before exit? (Y/N): ");
+                        string backupChoice = Console.ReadLine().Trim().ToUpper();
+                        if (backupChoice == "Y")
+                            BackupAccountsInformationToFile();
+
                         running = false;
                         break;
                     default: Console.WriteLine("Invalid choice."); break;
@@ -236,6 +242,36 @@ namespace MiniProjectExplanation
             double average = feedbackRatings.Average();
             Console.WriteLine($"📊 Average User Rating: {average:F2} / 5");
         }
+
+        static void BackupAccountsInformationToFile()
+        {
+            string timestamp = DateTime.Now.ToString("yyyy-MM-dd_HHmm");
+            string backupFileName = $"Backup_{timestamp}.txt";
+
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(backupFileName))
+                {
+                    for (int i = 0; i < accountNumbers.Count; i++)
+                    {
+                        string safeName = accountNames[i].Replace(',', ' ');
+                        string safePhone = phoneNumbers[i].Replace(',', ' ');
+                        string safeAddress = addresses[i].Replace(',', ' ');
+                        string tx = string.Join(";", transactions[i]);
+
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx}";
+                        writer.WriteLine(dataLine);
+                    }
+                }
+
+                Console.WriteLine($"✅ Backup saved as: {backupFileName}");
+            }
+            catch
+            {
+                Console.WriteLine("❌ Error creating backup.");
+            }
+        }
+
 
 
 

@@ -327,7 +327,7 @@ namespace MiniProjectExplanation
                 }
 
                 isLocked[index] = false; // unlock the account
-                failedLoginAttempts[index] = 0;
+                failedLoginAttempts[index] = 0; // reset failed attempts
                 Console.WriteLine($" Account {accNum} has been unlocked.");
             }
             else
@@ -339,15 +339,15 @@ namespace MiniProjectExplanation
 
         static void SubmitFeedback()
         {
-            Console.Write("Rate our service (1 to 5): ");
-            if (int.TryParse(Console.ReadLine(), out int rating) && rating >= 1 && rating <= 5)
+            Console.Write("Rate our service (1 to 5): "); // prompt user for feedback rating
+            if (int.TryParse(Console.ReadLine(), out int rating) && rating >= 1 && rating <= 5) // check if input is a valid integer between 1 and 5
             {
-                feedbackRatings.Add(rating);
-                Console.WriteLine("✅ Thank you for your feedback!");
+                feedbackRatings.Add(rating); // add rating to the list
+                Console.WriteLine(" Thank you for your feedback!");
             }
             else
             {
-                Console.WriteLine("❌ Invalid rating. Must be between 1 and 5.");
+                Console.WriteLine(" Invalid rating. Must be between 1 and 5.");
             }
         }
 

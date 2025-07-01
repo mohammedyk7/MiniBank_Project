@@ -1,6 +1,8 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace MiniProjectExplanation
 {
@@ -22,9 +24,40 @@ namespace MiniProjectExplanation
         static Stack<string> reviewsStack = new Stack<string>();
         static List<string> passwordHashes = new List<string>();
         static List<string> nationalIDs = new List<string>();
-        static List<bool> isLocked = new List<bool>();
-        static List<int> failedLoginAttempts = new List<int>();
+        static string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in bytes)
+                    builder.Append(b.ToString("x2"));
+                return builder.ToString();
+            }
+        }
+        static string ReadPassword()
+        {
+            StringBuilder password = new StringBuilder();
+            ConsoleKeyInfo key;
+            do
+            {
+                key = Console.ReadKey(true);
+                if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                {
+                    password.Length--;
+                    Console.Write("\b \b");
+                }
+                else if (!char.IsControl(key.KeyChar))
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+            } while (key.Key != ConsoleKey.Enter);
+            Console.WriteLine();
+            return password.ToString();
+        }
 
+        
         // Account number generator
         static int lastAccountNumber;
 
@@ -156,7 +189,6 @@ namespace MiniProjectExplanation
                 return;
             }
 
-            //var (name, nationalID) = createAccountRequests.Dequeue();
             string request = createAccountRequests.Dequeue();
             string[] parts = request.Split('|');
             string name = parts[0];
@@ -164,14 +196,21 @@ namespace MiniProjectExplanation
 
             int newAccountNumber = lastAccountNumber + 1;
 
+            Console.Write("Set a password for the new account: ");
+            string password = ReadPassword();
+            string hash = HashPassword(password);
+
             accountNumbers.Add(newAccountNumber);
             accountNames.Add($"{name} ");
             balances.Add(0.0);
+            passwordHashes.Add(hash);
+            nationalIDs.Add(nationalID);
 
             lastAccountNumber = newAccountNumber;
 
             Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
         }
+
 
         static void Deposit()
         {
@@ -409,6 +448,32 @@ namespace MiniProjectExplanation
             catch
             {
                 Console.WriteLine("Error loading reviews.");
+            }
+        }
+        static int Login()
+        {
+            Console.Write("Enter your National ID: ");
+            string inputID = Console.ReadLine();
+
+            int index = nationalIDs.IndexOf(inputID);
+            if (index == -1)
+            {
+                Console.WriteLine("Account not found.");
+                return -1;
+            }
+
+            Console.Write("Enter your password: ");
+            string password = ReadPassword();
+            string hash = HashPassword(password);
+
+            if (passwordHashes[index] == hash)
+            {
+                return index;
+            }
+            else
+            {
+                Console.WriteLine("Incorrect password.");
+                return -1;
             }
         }
     }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
+
 
 namespace MiniProjectExplanation
 {
@@ -67,6 +69,12 @@ namespace MiniProjectExplanation
         static List<double> loanInterestRates = new List<double>();
         static List<int> feedbackRatings = new List<int>();
         static Queue<(int accountIndex, double amount, double interestRate)> loanRequests = new Queue<(int, double, double)>();
+        static Queue<(int accountIndex, DateTime appointmentDate, string purpose)> appointments = new Queue<(int, DateTime, string)>();
+        static List<bool> hasAppointment = new List<bool>(); // One per user
+        static List<int> failedLoginAttempts = new List<int>();
+        static List<bool> isLocked = new List<bool>();
+
+
 
 
 
@@ -137,6 +145,13 @@ namespace MiniProjectExplanation
                 Console.WriteLine("7. Update My Contact Info");
                 Console.WriteLine("8. Request a Loan");
                 Console.WriteLine("9. View Transaction History"); // new option
+                Console.WriteLine("10. View Transaction History");
+                Console.WriteLine("11. Book Appointment");
+                Console.WriteLine("12. LINQ Tools (Search/Sort)");
+
+
+
+
 
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
@@ -153,6 +168,12 @@ namespace MiniProjectExplanation
                     case "7": UpdateContactInfo(); break;
                     case "8": RequestLoan(); break;
                     case "9": ViewTransactions(); break;
+                    case "10": ViewTransactionHistory(); break;
+                    case "11": BookAppointment(); break;
+                    case "12": LINQTools(); break;
+
+
+
 
 
 
@@ -179,6 +200,10 @@ namespace MiniProjectExplanation
                 Console.WriteLine("4. View Pending Account Requests");
                 Console.WriteLine("5. Process Loan Requests");
                 Console.WriteLine("6. View Average User Feedback");
+                Console.WriteLine("7. View Appointments");
+                Console.WriteLine("8. Unlock Locked Account");
+
+
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string adminChoice = Console.ReadLine();
@@ -191,6 +216,10 @@ namespace MiniProjectExplanation
                     case "4": ViewPendingRequests(); break;
                     case "5": ProcessLoanRequest(); break;
                     case "6": ShowAverageFeedback(); break;
+                    case "7": ViewAppointments(); break;
+                    case "8": UnlockAccount(); break;
+
+
 
 
                     case "0": inAdminMenu = false; break;
@@ -216,6 +245,97 @@ namespace MiniProjectExplanation
                 return false;
             }
         }
+        static void LINQTools()
+        {
+            Console.Clear();
+            Console.WriteLine("\n--- LINQ Tools ---");
+            Console.WriteLine("1. Sort accounts by balance (descending)");
+            Console.WriteLine("2. Search accounts by name");
+            Console.WriteLine("3. Show accounts with balance > X");
+            Console.Write("Choose option: ");
+            string choice = Console.ReadLine();
+
+            if (choice == "1")
+            {
+                var sorted = accountNumbers
+                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })
+                    .OrderByDescending(x => x.balance);
+
+                foreach (var x in sorted)
+                    Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
+            }
+            else if (choice == "2")
+            {
+                Console.Write("Enter name to search: ");
+                string searchName = Console.ReadLine();
+
+                var matchingAccounts = accountNumbers
+                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })
+                    .Where(x => x.name.Contains(searchName, StringComparison.OrdinalIgnoreCase));
+
+                if (!matchingAccounts.Any())
+                {
+                    Console.WriteLine("⚠️ No accounts found matching the given name.");
+                }
+                else
+                {
+                    foreach (var x in matchingAccounts)
+                        Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
+                }
+            }
+            else if (choice == "3")
+            {
+                Console.Write("Enter minimum balance: ");
+                if (double.TryParse(Console.ReadLine(), out double min))
+                {
+                    var richAccounts = balances
+                        .Select((b, i) => new { acc = accountNumbers[i], name = accountNames[i], balance = b })
+                        .Where(x => x.balance > min)
+                        .ToList(); // ✅ Convert to list so we can check the count
+
+                    if (richAccounts.Count == 0)
+                    {
+                        Console.WriteLine("⚠️ No accounts found with balance above the given amount.");
+                    }
+                    else
+                    {
+                        foreach (var x in richAccounts)
+                            Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid amount.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice.");
+            }
+        }
+
+        static void UnlockAccount()
+        {
+            Console.Write("Enter account number to unlock: ");
+            if (int.TryParse(Console.ReadLine(), out int accNum))
+            {
+                int index = accountNumbers.IndexOf(accNum);
+                if (index == -1)
+                {
+                    Console.WriteLine("Account not found.");
+                    return;
+                }
+
+                isLocked[index] = false;
+                failedLoginAttempts[index] = 0;
+                Console.WriteLine($"✅ Account {accNum} has been unlocked.");
+            }
+            else
+            {
+                Console.WriteLine("Invalid input.");
+            }
+        }
+
 
         static void SubmitFeedback()
         {
@@ -259,8 +379,8 @@ namespace MiniProjectExplanation
                         string safeAddress = addresses[i].Replace(',', ' ');
                         string tx = string.Join(";", transactions[i]);
 
-                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx}";
-                        writer.WriteLine(dataLine);
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{isLocked[i]},{failedLoginAttempts[i]}";
+
                     }
                 }
 
@@ -271,6 +391,84 @@ namespace MiniProjectExplanation
                 Console.WriteLine("❌ Error creating backup.");
             }
         }
+
+        static void ViewTransactionHistory()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            Console.WriteLine($"\nTransaction History for Account {accountNumbers[index]} - {accountNames[index]}");
+            Console.WriteLine("Date        | Type            | Amount     | Balance After");
+
+            double runningBalance = 0;
+
+            foreach (var tx in transactions[index])
+            {
+                var parts = tx.Split(',');
+                if (parts.Length >= 3)
+                {
+                    string date = parts[0];
+                    string type = parts[1];
+                    if (double.TryParse(parts[2], out double amount))
+                    {
+                        if (type.ToLower().Contains("withdraw"))
+                            runningBalance -= amount;
+                        else
+                            runningBalance += amount;
+
+                        Console.WriteLine($"{date,-11} | {type,-15} | {amount,10:F2} | {runningBalance,10:F2}");
+                    }
+                }
+            }
+
+            if (transactions[index].Count == 0)
+                Console.WriteLine("No transactions recorded.");
+        }
+
+        static void BookAppointment()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            
+            if (hasAppointment[index])
+            {
+                Console.WriteLine("❌ You already have an active appointment.");
+                return;
+            }
+
+            Console.Write("Enter appointment date (yyyy-mm-dd): ");
+            if (!DateTime.TryParse(Console.ReadLine(), out DateTime date))
+            {
+                Console.WriteLine("Invalid date format.");
+                return;
+            }
+
+            Console.Write("Purpose (Loan, Consultation, etc.): ");
+            string purpose = Console.ReadLine();
+
+            appointments.Enqueue((index, date, purpose));
+            hasAppointment[index] = true;
+
+            Console.WriteLine("✅ Appointment booked successfully.");
+        }
+
+        static void ViewAppointments()
+        {
+            if (appointments.Count == 0)
+            {
+                Console.WriteLine("No appointments scheduled.");
+                return;
+            }
+
+            Console.WriteLine("\n--- Scheduled Appointments ---");
+            foreach (var (index, date, purpose) in appointments)
+            {
+                Console.WriteLine($"{accountNames[index]} ({accountNumbers[index]}) - {purpose} on {date:yyyy-MM-dd}");
+            }
+        }
+
+
 
 
 
@@ -330,11 +528,59 @@ namespace MiniProjectExplanation
             transactions.Add(new List<string>());
             phoneNumbers.Add(phone);
             addresses.Add(address);
+            hasAppointment.Add(false);
+            failedLoginAttempts.Add(0);
+            isLocked.Add(false);
+
+
 
             lastAccountNumber = newAccountNumber;
 
             Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
         }
+
+        static int Login()
+        {
+            Console.Write("Enter your National ID: ");
+            string inputID = Console.ReadLine();
+
+            int index = nationalIDs.IndexOf(inputID);
+            if (index == -1)
+            {
+                Console.WriteLine("Account not found.");
+                return -1;
+            }
+
+            if (isLocked[index])
+            {
+                Console.WriteLine("❌ Account is locked. Contact admin.");
+                return -1;
+            }
+
+            Console.Write("Enter your password: ");
+            string password = ReadPassword();
+            string hash = HashPassword(password);
+
+            if (passwordHashes[index] == hash)
+            {
+                failedLoginAttempts[index] = 0; // reset on success
+                return index;
+            }
+            else
+            {
+                failedLoginAttempts[index]++;
+                Console.WriteLine("❌ Incorrect password.");
+
+                if (failedLoginAttempts[index] >= 3)
+                {
+                    isLocked[index] = true;
+                    Console.WriteLine("⚠️ Too many failed attempts. Account locked.");
+                }
+
+                return -1;
+            }
+        }
+
 
 
         static void Deposit()
@@ -342,29 +588,55 @@ namespace MiniProjectExplanation
             int index = Login();
             if (index == -1) return;
 
+            Console.WriteLine("Select currency: ");
+            Console.WriteLine("1. OMR (default)");
+            Console.WriteLine("2. USD");
+            Console.WriteLine("3. EUR");
+            Console.Write("Choice: ");
+            string currencyChoice = Console.ReadLine();
+
+            double exchangeRate = 1.0;
+            string currency = "OMR";
+
+            switch (currencyChoice)
+            {
+                case "2":
+                    exchangeRate = 3.8; // 1 USD = 3.8 OMR
+                    currency = "USD";
+                    break;
+                case "3":
+                    exchangeRate = 4.1; // 1 EUR = 4.1 OMR
+                    currency = "EUR";
+                    break;
+                default:
+                    break;
+            }
+
             try
             {
-                Console.Write("Enter deposit amount: ");
-                double amount = Convert.ToDouble(Console.ReadLine());
+                Console.Write($"Enter deposit amount ({currency}): ");
+                double foreignAmount = Convert.ToDouble(Console.ReadLine());
 
-                if (amount <= 0)
+                if (foreignAmount <= 0)
                 {
                     Console.WriteLine("Amount must be positive.");
                     return;
                 }
 
-                balances[index] += amount;
-                string record = $"{DateTime.Now:yyyy-MM-dd},Deposit,{amount}";
-                transactions[index].Add(record);
-                Console.WriteLine("Deposit successful.");
-                SubmitFeedback();
+                double convertedAmount = foreignAmount * exchangeRate;
+                balances[index] += convertedAmount;
 
+                string record = $"{DateTime.Now:yyyy-MM-dd},Deposit,{convertedAmount:F2} OMR (from {foreignAmount:F2} {currency})";
+                transactions[index].Add(record);
+
+                Console.WriteLine($"Deposit successful. {foreignAmount:F2} {currency} = {convertedAmount:F2} OMR.");
             }
             catch
             {
                 Console.WriteLine("Invalid amount.");
             }
         }
+
 
         static void Withdraw()
         {
@@ -411,9 +683,6 @@ namespace MiniProjectExplanation
             Console.WriteLine($"Holder Name: {accountNames[index]}");
             Console.WriteLine($"Current Balance: {balances[index]}");
         }
-
-
-     
         static void SaveAccountsInformationToFile()
         {
             try
@@ -422,16 +691,16 @@ namespace MiniProjectExplanation
                 {
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
-                        // Prepare safe data (replace commas in text fields)
+                        // Sanitize text fields to avoid breaking CSV structure
                         string safeName = accountNames[i].Replace(',', ' ');
                         string safePhone = phoneNumbers[i].Replace(',', ' ');
                         string safeAddress = addresses[i].Replace(',', ' ');
 
-                        // Join transactions with ;
+                        // Join all transactions using semicolon
                         string tx = string.Join(";", transactions[i]);
 
-                        // Save all fields in correct order
-                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx}";
+                        // Write all fields including appointment, lock status, and login attempts
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{isLocked[i]},{failedLoginAttempts[i]}";
 
                         writer.WriteLine(dataLine);
                     }
@@ -443,7 +712,6 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error saving file.");
             }
         }
-
 
 
         static void LoadAccountsInformationFromFile()
@@ -464,6 +732,9 @@ namespace MiniProjectExplanation
                 transactions.Clear();
                 phoneNumbers.Clear();
                 addresses.Clear();
+                hasAppointment.Clear();
+                isLocked.Clear();                // <-- New
+                failedLoginAttempts.Clear();     // <-- New
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -479,11 +750,20 @@ namespace MiniProjectExplanation
                         nationalIDs.Add(parts[4]);
                         phoneNumbers.Add(parts[5]);
                         addresses.Add(parts[6]);
+
                         var txList = new List<string>();
                         if (parts.Length > 7 && !string.IsNullOrEmpty(parts[7]))
                             txList.AddRange(parts[7].Split(';'));
                         transactions.Add(txList);
 
+                        hasAppointment.Add(false); // default for now
+
+                        // Safe load of isLocked and failedLoginAttempts
+                        bool locked = parts.Length > 8 && bool.TryParse(parts[8], out bool parsedLock) ? parsedLock : false;
+                        int attempts = parts.Length > 9 && int.TryParse(parts[9], out int parsedAttempts) ? parsedAttempts : 0;
+
+                        isLocked.Add(locked);
+                        failedLoginAttempts.Add(attempts);
 
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;
@@ -497,6 +777,8 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error loading file.");
             }
         }
+
+
         // ===== Monthly Statement Generation =====
         static void GenerateMonthlyStatement()
         {
@@ -782,31 +1064,6 @@ namespace MiniProjectExplanation
             }
         }
 
-        static int Login()
-        {
-            Console.Write("Enter your National ID: ");
-            string inputID = Console.ReadLine();
 
-            int index = nationalIDs.IndexOf(inputID);
-            if (index == -1)
-            {
-                Console.WriteLine("Account not found.");
-                return -1;
-            }
-
-            Console.Write("Enter your password: ");
-            string password = ReadPassword();
-            string hash = HashPassword(password);
-
-            if (passwordHashes[index] == hash)
-            {
-                return index;
-            }
-            else
-            {
-                Console.WriteLine("Incorrect password.");
-                return -1;
-            }
-        }
     }
 }

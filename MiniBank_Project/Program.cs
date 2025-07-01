@@ -214,7 +214,7 @@ namespace MiniProjectExplanation
 
         static void Deposit()
         {
-            int index = GetAccountIndex();
+            int index = Login();
             if (index == -1) return;
 
             try
@@ -239,7 +239,7 @@ namespace MiniProjectExplanation
 
         static void Withdraw()
         {
-            int index = GetAccountIndex();
+            int index = Login();
             if (index == -1) return;
 
             try
@@ -271,13 +271,14 @@ namespace MiniProjectExplanation
 
         static void ViewBalance()
         {
-            int index = GetAccountIndex();
+            int index = Login();
             if (index == -1) return;
 
             Console.WriteLine($"Account Number: {accountNumbers[index]}");
             Console.WriteLine($"Holder Name: {accountNames[index]}");
             Console.WriteLine($"Current Balance: {balances[index]}");
         }
+
 
         static void SaveAccountsInformationToFile()
         {
@@ -287,7 +288,8 @@ namespace MiniProjectExplanation
                 {
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
-                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]}";
+                        // Save all fields, separated by comma
+                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]},{passwordHashes[i]},{nationalIDs[i]}";
                         writer.WriteLine(dataLine);
                     }
                 }
@@ -298,6 +300,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error saving file.");
             }
         }
+
 
         static void LoadAccountsInformationFromFile()
         {
@@ -312,7 +315,8 @@ namespace MiniProjectExplanation
                 accountNumbers.Clear();
                 accountNames.Clear();
                 balances.Clear();
-                //transactions.Clear();
+                passwordHashes.Clear();
+                nationalIDs.Clear();
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -324,6 +328,8 @@ namespace MiniProjectExplanation
                         accountNumbers.Add(accNum);
                         accountNames.Add(parts[1]);
                         balances.Add(Convert.ToDouble(parts[2]));
+                        passwordHashes.Add(parts[3]);
+                        nationalIDs.Add(parts[4]);
 
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;
@@ -336,8 +342,8 @@ namespace MiniProjectExplanation
             {
                 Console.WriteLine("Error loading file.");
             }
-
         }
+
 
         static void ViewAllAccounts()
         {

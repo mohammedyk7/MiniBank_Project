@@ -214,7 +214,7 @@ namespace MiniProjectExplanation
                     case "2": ViewReviews(); break;
                     case "3": ViewAllAccounts(); break;
                     case "4": ViewPendingRequests(); break;
-                    case "5": ProcessLoanRequest(); break;
+                    case "5": ProcessLoanRequest(); break; // new feature
                     case "6": ShowAverageFeedback(); break;
                     case "7": ViewAppointments(); break;
                     case "8": UnlockAccount(); break;

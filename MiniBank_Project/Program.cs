@@ -57,6 +57,9 @@ namespace MiniProjectExplanation
             return password.ToString();
         }
         static List<List<string>> transactions = new List<List<string>>(); // Each string: "yyyy-MM-dd,Type,Amount"
+        static List<string> phoneNumbers = new List<string>(); // List to store phone numbers (if needed)
+        static List<string> addresses = new List<string>(); // list to store addresses (if needed)
+
 
 
 
@@ -204,7 +207,7 @@ namespace MiniProjectExplanation
             string hash = HashPassword(password);
 
             accountNumbers.Add(newAccountNumber);
-            accountNames.Add($"{name} ");
+            accountNames.Add(name.Trim()); // Remove any leading spaces
             balances.Add(0.0);
             passwordHashes.Add(hash);
             nationalIDs.Add(nationalID);
@@ -297,7 +300,7 @@ namespace MiniProjectExplanation
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
                       
-                        string tx = string.Join(",", transactions[i]); //join transaction 
+                        string tx = string.Join(";", transactions[i]); //join transaction 
                         // Save all fields, separated by comma
                         string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]},{passwordHashes[i]},{nationalIDs[i]}";
                         writer.WriteLine(dataLine);
@@ -343,8 +346,8 @@ namespace MiniProjectExplanation
                         nationalIDs.Add(parts[4]);
                         var txList = new List<string>();
                         if (parts.Length > 5 && !string.IsNullOrEmpty(parts[5]))
-                          txList.AddRange(parts[5].Split(';')); // Assuming transactions are separated by semicolon
-                        transactions.Add(txList);
+                            txList.AddRange(parts[5].Split(';'));
+
 
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;

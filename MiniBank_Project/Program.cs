@@ -12,6 +12,9 @@ namespace MiniProjectExplanation
         const double MinimumBalance = 100.0;
         const string AccountsFilePath = "accounts.txt";
         const string ReviewsFilePath = "reviews.txt";
+        const string AdminID = "admin";
+        const string AdminPassword = "1234";
+
 
         // Global lists (parallel)
         static List<int> accountNumbers = new List<int>();
@@ -59,6 +62,11 @@ namespace MiniProjectExplanation
         static List<List<string>> transactions = new List<List<string>>(); // Each string: "yyyy-MM-dd,Type,Amount"
         static List<string> phoneNumbers = new List<string>(); // List to store phone numbers (if needed)
         static List<string> addresses = new List<string>(); // list to store addresses (if needed)
+        static List<bool> hasActiveLoan = new List<bool>();
+        static List<double> loanAmounts = new List<double>();
+        static List<double> loanInterestRates = new List<double>();
+        static Queue<(int accountIndex, double amount, double interestRate)> loanRequests = new Queue<(int, double, double)>();
+
 
 
 
@@ -86,7 +94,11 @@ namespace MiniProjectExplanation
                 switch (mainChoice)
                 {
                     case "1": UserMenu(); break;
-                    case "2": AdminMenu(); break;
+                    case "2":
+                        if (AdminLogin())
+                            AdminMenu();
+                        break;
+
                     case "0":
                         SaveAccountsInformationToFile();
                         SaveReviews();
@@ -115,6 +127,10 @@ namespace MiniProjectExplanation
                 Console.WriteLine("4. View Balance");
                 Console.WriteLine("5. Submit Review/Complaint");
                 Console.WriteLine("6. Generate Monthly Statement"); // New feature
+                Console.WriteLine("7. Update My Contact Info");
+                Console.WriteLine("8. Request a Loan");
+                Console.WriteLine("9. View Transaction History"); // new option
+
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string userChoice = Console.ReadLine();
@@ -127,6 +143,12 @@ namespace MiniProjectExplanation
                     case "4": ViewBalance(); break;
                     case "5": SubmitReview(); break;
                     case "6": GenerateMonthlyStatement(); break;
+                    case "7": UpdateContactInfo(); break;
+                    case "8": RequestLoan(); break;
+                    case "9": ViewTransactions(); break;
+
+
+
 
                     case "0": inUserMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
@@ -148,6 +170,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("2. View Submitted Reviews");
                 Console.WriteLine("3. View All Accounts");
                 Console.WriteLine("4. View Pending Account Requests");
+                Console.WriteLine("5. Process Loan Requests");
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string adminChoice = Console.ReadLine();
@@ -158,16 +181,36 @@ namespace MiniProjectExplanation
                     case "2": ViewReviews(); break;
                     case "3": ViewAllAccounts(); break;
                     case "4": ViewPendingRequests(); break;
+                    case "5": ProcessLoanRequest(); break;
+
                     case "0": inAdminMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
                 }
                 Console.ReadKey();
             }
         }
+        static bool AdminLogin()
+        {
+            Console.Write("Enter Admin ID: ");
+            string id = Console.ReadLine();
+            Console.Write("Enter Admin Password: ");
+            string password = ReadPassword();
+
+            if (id == AdminID && password == AdminPassword)
+            {
+                return true;
+            }
+            else
+            {
+                Console.WriteLine("❌ Access denied. Invalid credentials.");
+                return false;
+            }
+        }
 
 
 
-      
+
+
         static void RequestAccountCreation()
         {
             Console.Write("Enter your full name: ");
@@ -206,12 +249,21 @@ namespace MiniProjectExplanation
             string password = ReadPassword();
             string hash = HashPassword(password);
 
+
+            Console.Write("Enter your phone number: ");
+            string phone = Console.ReadLine();
+
+            Console.Write("Enter your address: ");
+            string address = Console.ReadLine();
+
             accountNumbers.Add(newAccountNumber);
             accountNames.Add(name.Trim()); // Remove any leading spaces
             balances.Add(0.0);
             passwordHashes.Add(hash);
             nationalIDs.Add(nationalID);
             transactions.Add(new List<string>());
+            phoneNumbers.Add(phone);
+            addresses.Add(address);
 
             lastAccountNumber = newAccountNumber;
 
@@ -291,6 +343,7 @@ namespace MiniProjectExplanation
         }
 
 
+     
         static void SaveAccountsInformationToFile()
         {
             try
@@ -299,10 +352,17 @@ namespace MiniProjectExplanation
                 {
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
-                      
-                        string tx = string.Join(";", transactions[i]); //join transaction 
-                        // Save all fields, separated by comma
-                        string dataLine = $"{accountNumbers[i]},{accountNames[i]},{balances[i]},{passwordHashes[i]},{nationalIDs[i]}";
+                        // Prepare safe data (replace commas in text fields)
+                        string safeName = accountNames[i].Replace(',', ' ');
+                        string safePhone = phoneNumbers[i].Replace(',', ' ');
+                        string safeAddress = addresses[i].Replace(',', ' ');
+
+                        // Join transactions with ;
+                        string tx = string.Join(";", transactions[i]);
+
+                        // Save all fields in correct order
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx}";
+
                         writer.WriteLine(dataLine);
                     }
                 }
@@ -313,6 +373,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error saving file.");
             }
         }
+
 
 
         static void LoadAccountsInformationFromFile()
@@ -331,6 +392,8 @@ namespace MiniProjectExplanation
                 passwordHashes.Clear();
                 nationalIDs.Clear();
                 transactions.Clear();
+                phoneNumbers.Clear();
+                addresses.Clear();
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -344,9 +407,12 @@ namespace MiniProjectExplanation
                         balances.Add(Convert.ToDouble(parts[2]));
                         passwordHashes.Add(parts[3]);
                         nationalIDs.Add(parts[4]);
+                        phoneNumbers.Add(parts[5]);
+                        addresses.Add(parts[6]);
                         var txList = new List<string>();
-                        if (parts.Length > 5 && !string.IsNullOrEmpty(parts[5]))
-                            txList.AddRange(parts[5].Split(';'));
+                        if (parts.Length > 7 && !string.IsNullOrEmpty(parts[7]))
+                            txList.AddRange(parts[7].Split(';'));
+                        transactions.Add(txList);
 
 
                         if (accNum > lastAccountNumber)
@@ -396,6 +462,60 @@ namespace MiniProjectExplanation
             Console.WriteLine($"Statement saved to {filename}");
         }
 
+        static void UpdateContactInfo()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            Console.WriteLine($"\nCurrent phone: {phoneNumbers[index]}");
+            Console.Write("Enter new phone number (leave blank to keep current): ");
+            string phone = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(phone))
+                phoneNumbers[index] = phone;
+
+            Console.WriteLine($"Current address: {addresses[index]}");
+            Console.Write("Enter new address (leave blank to keep current): ");
+            string address = Console.ReadLine();
+            if (!string.IsNullOrWhiteSpace(address))
+                addresses[index] = address;
+
+            Console.WriteLine(" Your contact info has been updated.");
+        }
+
+        static void RequestLoan()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            if (hasActiveLoan[index])
+            {
+                Console.WriteLine("❌ You already have an active loan.");
+                return;
+            }
+
+            if (balances[index] < 5000)
+            {
+                Console.WriteLine("❌ You must have at least 5000 balance to request a loan.");
+                return;
+            }
+
+            Console.Write("Enter loan amount: ");
+            if (!double.TryParse(Console.ReadLine(), out double amount) || amount <= 0)
+            {
+                Console.WriteLine("Invalid amount.");
+                return;
+            }
+
+            Console.Write("Enter interest rate (e.g., 5 for 5%): ");
+            if (!double.TryParse(Console.ReadLine(), out double rate) || rate < 0)
+            {
+                Console.WriteLine("Invalid rate.");
+                return;
+            }
+
+            loanRequests.Enqueue((index, amount, rate));
+            Console.WriteLine("✅ Loan request submitted. Awaiting admin approval.");
+        }
 
 
         static void ViewAllAccounts()
@@ -489,6 +609,42 @@ namespace MiniProjectExplanation
             }
         }
 
+        static void ProcessLoanRequest()
+        {
+            if (loanRequests.Count == 0)
+            {
+                Console.WriteLine("No pending loan requests.");
+                return;
+            }
+
+            var (index, amount, rate) = loanRequests.Dequeue();
+
+            Console.WriteLine($"Loan Request:");
+            Console.WriteLine($"Account: {accountNumbers[index]} - {accountNames[index]}");
+            Console.WriteLine($"Requested Amount: {amount}");
+            Console.WriteLine($"Interest Rate: {rate}%");
+
+            Console.Write("Approve loan? (Y/N): ");
+            string choice = Console.ReadLine().Trim().ToUpper();
+
+            if (choice == "Y")
+            {
+                balances[index] += amount;
+                hasActiveLoan[index] = true;
+                loanAmounts[index] = amount;
+                loanInterestRates[index] = rate;
+
+                string record = $"{DateTime.Now:yyyy-MM-dd},Loan Approved,{amount}";
+                transactions[index].Add(record);
+
+                Console.WriteLine("✅ Loan approved and amount credited.");
+            }
+            else
+            {
+                Console.WriteLine("❌ Loan request rejected.");
+            }
+        }
+
         static void LoadReviews()
         {
             try
@@ -509,6 +665,53 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error loading reviews.");
             }
         }
+        static void ViewTransactions()
+        {
+            int index = Login();
+            if (index == -1) return;
+
+            Console.WriteLine("\n--- View Transactions ---");
+            Console.WriteLine("1. Show last N transactions");
+            Console.WriteLine("2. Show transactions after specific date");
+            Console.Write("Choose option: ");
+            string option = Console.ReadLine();
+
+            if (option == "1")
+            {
+                Console.Write("Enter N (number of transactions): ");
+                if (int.TryParse(Console.ReadLine(), out int n) && n > 0)
+                {
+                    var recent = transactions[index].TakeLast(n);
+                    foreach (var tx in recent)
+                        Console.WriteLine(tx);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid number.");
+                }
+            }
+            else if (option == "2")
+            {
+                Console.Write("Enter date (yyyy-MM-dd): ");
+                string input = Console.ReadLine();
+                if (DateTime.TryParse(input, out DateTime date))
+                {
+                    var filtered = transactions[index]
+                        .Where(tx => DateTime.TryParse(tx.Split(',')[0], out DateTime txDate) && txDate > date);
+                    foreach (var tx in filtered)
+                        Console.WriteLine(tx);
+                }
+                else
+                {
+                    Console.WriteLine("Invalid date.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid option.");
+            }
+        }
+
         static int Login()
         {
             Console.Write("Enter your National ID: ");

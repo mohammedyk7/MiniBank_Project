@@ -65,6 +65,7 @@ namespace MiniProjectExplanation
         static List<bool> hasActiveLoan = new List<bool>();
         static List<double> loanAmounts = new List<double>();
         static List<double> loanInterestRates = new List<double>();
+        static List<int> feedbackRatings = new List<int>();
         static Queue<(int accountIndex, double amount, double interestRate)> loanRequests = new Queue<(int, double, double)>();
 
 
@@ -171,6 +172,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("3. View All Accounts");
                 Console.WriteLine("4. View Pending Account Requests");
                 Console.WriteLine("5. Process Loan Requests");
+                Console.WriteLine("6. View Average User Feedback");
                 Console.WriteLine("0. Return to Main Menu");
                 Console.Write("Select option: ");
                 string adminChoice = Console.ReadLine();
@@ -182,6 +184,8 @@ namespace MiniProjectExplanation
                     case "3": ViewAllAccounts(); break;
                     case "4": ViewPendingRequests(); break;
                     case "5": ProcessLoanRequest(); break;
+                    case "6": ShowAverageFeedback(); break;
+
 
                     case "0": inAdminMenu = false; break;
                     default: Console.WriteLine("Invalid choice."); break;
@@ -205,6 +209,32 @@ namespace MiniProjectExplanation
                 Console.WriteLine("❌ Access denied. Invalid credentials.");
                 return false;
             }
+        }
+
+        static void SubmitFeedback()
+        {
+            Console.Write("Rate our service (1 to 5): ");
+            if (int.TryParse(Console.ReadLine(), out int rating) && rating >= 1 && rating <= 5)
+            {
+                feedbackRatings.Add(rating);
+                Console.WriteLine("✅ Thank you for your feedback!");
+            }
+            else
+            {
+                Console.WriteLine("❌ Invalid rating. Must be between 1 and 5.");
+            }
+        }
+
+        static void ShowAverageFeedback()
+        {
+            if (feedbackRatings.Count == 0)
+            {
+                Console.WriteLine("No feedback ratings yet.");
+                return;
+            }
+
+            double average = feedbackRatings.Average();
+            Console.WriteLine($"📊 Average User Rating: {average:F2} / 5");
         }
 
 
@@ -291,6 +321,8 @@ namespace MiniProjectExplanation
                 string record = $"{DateTime.Now:yyyy-MM-dd},Deposit,{amount}";
                 transactions[index].Add(record);
                 Console.WriteLine("Deposit successful.");
+                SubmitFeedback();
+
             }
             catch
             {
@@ -330,6 +362,8 @@ namespace MiniProjectExplanation
             {
                 Console.WriteLine("Invalid amount.");
             }
+            SubmitFeedback();
+
         }
 
         static void ViewBalance()

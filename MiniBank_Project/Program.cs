@@ -319,16 +319,16 @@ namespace MiniProjectExplanation
             Console.Write("Enter account number to unlock: ");
             if (int.TryParse(Console.ReadLine(), out int accNum)) // use int.TryParse for safe conversion 
             {
-                int index = accountNumbers.IndexOf(accNum);
+                int index = accountNumbers.IndexOf(accNum); // find index of account number
                 if (index == -1)
                 {
                     Console.WriteLine("Account not found.");
                     return;
                 }
 
-                isLocked[index] = false;
+                isLocked[index] = false; // unlock the account
                 failedLoginAttempts[index] = 0;
-                Console.WriteLine($"✅ Account {accNum} has been unlocked.");
+                Console.WriteLine($" Account {accNum} has been unlocked.");
             }
             else
             {

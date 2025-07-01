@@ -247,6 +247,7 @@ namespace MiniProjectExplanation
         }
         static void LINQTools()
         {
+            //firsr we get the data source 
             Console.Clear();
             Console.WriteLine("\n--- LINQ Tools ---");
             Console.WriteLine("1. Sort accounts by balance (descending)");
@@ -257,7 +258,8 @@ namespace MiniProjectExplanation
 
             if (choice == "1")
             {
-                var sorted = accountNumbers
+                //query creation 
+                var sorted = accountNumbers //
                     .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })
                     .OrderByDescending(x => x.balance);
 
@@ -347,20 +349,20 @@ namespace MiniProjectExplanation
             }
             else
             {
-                Console.WriteLine(" Invalid rating. Must be between 1 and 5.");
+                Console.WriteLine(" Invalid rating. Must be between 1 and 5."); 
             }
         }
 
         static void ShowAverageFeedback()
         {
-            if (feedbackRatings.Count == 0)
+            if (feedbackRatings.Count == 0) // 
             {
                 Console.WriteLine("No feedback ratings yet.");
                 return;
             }
 
             double average = feedbackRatings.Average();
-            Console.WriteLine($"📊 Average User Rating: {average:F2} / 5");
+            Console.WriteLine($" Average User Rating: {average:F2} / 5");
         }
 
         static void BackupAccountsInformationToFile()
@@ -918,7 +920,7 @@ namespace MiniProjectExplanation
             }
         }
 
-        // ===== Reviews & Complaints (Stack) =====
+        // ===== Reviews & Complaints =====
 
         static void SubmitReview()
         {

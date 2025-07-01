@@ -20,6 +20,10 @@ namespace MiniProjectExplanation
         //static Queue<(string name, string nationalID)> createAccountRequests = new Queue<(string, string)>();
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
         static Stack<string> reviewsStack = new Stack<string>();
+        static List<string> passwordHashes = new List<string>();
+        static List<string> nationalIDs = new List<string>();
+        static List<bool> isLocked = new List<bool>();
+        static List<int> failedLoginAttempts = new List<int>();
 
         // Account number generator
         static int lastAccountNumber;

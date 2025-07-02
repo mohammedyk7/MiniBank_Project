@@ -437,7 +437,7 @@ namespace MiniProjectExplanation
             
             if (hasAppointment[index])
             {
-                Console.WriteLine("❌ You already have an active appointment.");
+                Console.WriteLine(" You already have an active appointment.");
                 return;
             }
 
@@ -454,7 +454,7 @@ namespace MiniProjectExplanation
             appointments.Enqueue((index, date, purpose));
             hasAppointment[index] = true;
 
-            Console.WriteLine("✅ Appointment booked successfully.");
+            Console.WriteLine(" Appointment booked successfully.");
         }
 
         static void ViewAppointments()
@@ -534,14 +534,14 @@ namespace MiniProjectExplanation
             addresses.Add(address);
             hasAppointment.Add(false);
             hasActiveLoan.Add(false);
-            loanAmounts.Add(0);             // ✅ FIXED: Initialize loan amount
-            loanInterestRates.Add(0);       // ✅ FIXED: Initialize loan interest rate
+            loanAmounts.Add(0);             //  FIXED: Initialize loan amount
+            loanInterestRates.Add(0);       //  FIXED: Initialize loan interest rate
             failedLoginAttempts.Add(0);
             isLocked.Add(false);
 
             lastAccountNumber = newAccountNumber;
 
-            Console.WriteLine($"✅ Account created for {name} with Account Number: {newAccountNumber}");
+            Console.WriteLine($" Account created for {name} with Account Number: {newAccountNumber}");
         }
 
 
@@ -562,14 +562,14 @@ namespace MiniProjectExplanation
                 return -1;
             }
 
-            // ✅ Fix: Ensure lists are long enough before accessing index
+            //  Fix: Ensure lists are long enough before accessing index
             while (isLocked.Count <= index) isLocked.Add(false);
             while (failedLoginAttempts.Count <= index) failedLoginAttempts.Add(0);
             while (passwordHashes.Count <= index) passwordHashes.Add("");
 
             if (isLocked[index])
             {
-                Console.WriteLine("❌ Account is locked. Contact admin.");
+                Console.WriteLine(" Account is locked. Contact admin.");
                 return -1;
             }
 
@@ -585,12 +585,12 @@ namespace MiniProjectExplanation
             else
             {
                 failedLoginAttempts[index]++;
-                Console.WriteLine("❌ Incorrect password.");
+                Console.WriteLine(" Incorrect password.");
 
                 if (failedLoginAttempts[index] >= 3)
                 {
                     isLocked[index] = true;
-                    Console.WriteLine("⚠️ Too many failed attempts. Account locked.");
+                    Console.WriteLine(" Too many failed attempts. Account locked.");
                 }
 
                 return -1;
@@ -876,7 +876,7 @@ namespace MiniProjectExplanation
             while (loanAmounts.Count <= index) loanAmounts.Add(0);
             while (loanInterestRates.Count <= index) loanInterestRates.Add(0);
 
-            if (hasActiveLoan[index])
+            if (hasActiveLoan[index]) 
             {
                 Console.WriteLine(" You already have an active loan.");
                 return;

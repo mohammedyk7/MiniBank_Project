@@ -271,7 +271,7 @@ namespace MiniProjectExplanation
             else if (choice == "2")
             {
                 Console.Write("Enter name to search: ");
-                string searchName = Console.ReadLine();
+                string searchName = Console.ReadLine(); //declare a variable to hold the search name
 
                 var matchingAccounts = accountNumbers //mathcing accounts by name
                     .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })

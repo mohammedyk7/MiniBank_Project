@@ -262,7 +262,7 @@ namespace MiniProjectExplanation
             {
                 //query creation 
                 var sorted = accountNumbers 
-                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] }) //acc=account number , i=current element 
+                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] }) //acc=account number 101,102,, , i=current element 0,1,2
                     .OrderByDescending(x => x.balance); //if we want ascending order we can use OrderBy instead of OrderByDescending
 
                 foreach (var x in sorted) //x is an anonymous type with acc, name, and balance

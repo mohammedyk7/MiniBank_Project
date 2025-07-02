@@ -273,7 +273,7 @@ namespace MiniProjectExplanation
                 Console.Write("Enter name to search: ");
                 string searchName = Console.ReadLine();
 
-                var matchingAccounts = accountNumbers
+                var matchingAccounts = accountNumbers //mathcing accounts by name
                     .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })
                     .Where(x => x.name.Contains(searchName, StringComparison.OrdinalIgnoreCase));
 

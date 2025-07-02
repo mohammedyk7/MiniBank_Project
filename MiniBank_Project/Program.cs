@@ -265,7 +265,7 @@ namespace MiniProjectExplanation
                     .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] }) //acc=account number , i=current element 
                     .OrderByDescending(x => x.balance); //if we want ascending order we can use OrderBy instead of OrderByDescending
 
-                foreach (var x in sorted)
+                foreach (var x in sorted) //x is an anonymous type with acc, name, and balance
                     Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
             }
             else if (choice == "2")

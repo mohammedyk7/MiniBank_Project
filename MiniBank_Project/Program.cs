@@ -1,8 +1,8 @@
 ﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
-using System.Text;
+using System.Security.Cryptography; //for hashing passwords
+using System.Text; //for StringBuilder
 using System.Linq;
 
 
@@ -29,18 +29,18 @@ namespace MiniProjectExplanation
         static Stack<string> reviewsStack = new Stack<string>(); // Stack to store reviews and complaints
         static List<string> passwordHashes = new List<string>();// List to store hashed passwords
         static List<string> nationalIDs = new List<string>();// List to store National IDs
-        static string HashPassword(string password)
+        static string HashPassword(string password) //to improve security no one can see the raw password 
         {
-            using (SHA256 sha256 = SHA256.Create())
+            using (SHA256 sha256 = SHA256.Create()) //to convert password to hash
             {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password)); 
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
                     builder.Append(b.ToString("x2"));
                 return builder.ToString();
             }
         }
-        static string ReadPassword()
+        static string ReadPassword() //Reads password with hidden input (****).
         {
             StringBuilder password = new StringBuilder();
             ConsoleKeyInfo key;

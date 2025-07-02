@@ -496,6 +496,7 @@ namespace MiniProjectExplanation
             Console.WriteLine("Your account request has been submitted.");
         }
 
+ 
         static void ProcessNextAccountRequest()
         {
             if (createAccountRequests.Count == 0)
@@ -515,7 +516,6 @@ namespace MiniProjectExplanation
             string password = ReadPassword();
             string hash = HashPassword(password);
 
-
             Console.Write("Enter your phone number: ");
             string phone = Console.ReadLine();
 
@@ -523,7 +523,7 @@ namespace MiniProjectExplanation
             string address = Console.ReadLine();
 
             accountNumbers.Add(newAccountNumber);
-            accountNames.Add(name.Trim()); // Remove any leading spaces
+            accountNames.Add(name.Trim()); // Remove any leading/trailing spaces
             balances.Add(0.0);
             passwordHashes.Add(hash);
             nationalIDs.Add(nationalID);
@@ -531,15 +531,22 @@ namespace MiniProjectExplanation
             phoneNumbers.Add(phone);
             addresses.Add(address);
             hasAppointment.Add(false);
+            hasActiveLoan.Add(false);
+            loanAmounts.Add(0);             // ✅ FIXED: Initialize loan amount
+            loanInterestRates.Add(0);       // ✅ FIXED: Initialize loan interest rate
             failedLoginAttempts.Add(0);
             isLocked.Add(false);
 
-
-
             lastAccountNumber = newAccountNumber;
 
-            Console.WriteLine($"Account created for {name} with Account Number: {newAccountNumber}");
+            Console.WriteLine($"✅ Account created for {name} with Account Number: {newAccountNumber}");
         }
+
+
+      
+
+
+   
 
         static int Login()
         {
@@ -552,6 +559,11 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Account not found.");
                 return -1;
             }
+
+            // ✅ Fix: Ensure lists are long enough before accessing index
+            while (isLocked.Count <= index) isLocked.Add(false);
+            while (failedLoginAttempts.Count <= index) failedLoginAttempts.Add(0);
+            while (passwordHashes.Count <= index) passwordHashes.Add("");
 
             if (isLocked[index])
             {
@@ -582,6 +594,8 @@ namespace MiniProjectExplanation
                 return -1;
             }
         }
+
+
 
 
 
@@ -701,8 +715,9 @@ namespace MiniProjectExplanation
 
                         string tx = string.Join(";", transactions[i]);
 
-                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{hasAppointment[i]},{hasActiveLoan[i]}";
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{hasAppointment[i]},{hasActiveLoan[i]},{loanAmounts[i]},{loanInterestRates[i]},{isLocked[i]},{failedLoginAttempts[i]}";
                         writer.WriteLine(dataLine);
+
                     }
                 }
                 Console.WriteLine("Accounts saved successfully.");
@@ -715,6 +730,9 @@ namespace MiniProjectExplanation
 
 
 
+  
+  
+
         static void LoadAccountsInformationFromFile()
         {
             try
@@ -725,6 +743,7 @@ namespace MiniProjectExplanation
                     return;
                 }
 
+                // Clear all lists before loading
                 accountNumbers.Clear();
                 accountNames.Clear();
                 balances.Clear();
@@ -735,6 +754,10 @@ namespace MiniProjectExplanation
                 addresses.Clear();
                 hasAppointment.Clear();
                 hasActiveLoan.Clear();
+                loanAmounts.Clear();
+                loanInterestRates.Clear();
+                isLocked.Clear();
+                failedLoginAttempts.Clear();
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -752,17 +775,21 @@ namespace MiniProjectExplanation
                         phoneNumbers.Add(parts[5]);
                         addresses.Add(parts[6]);
 
-                        var txList = new List<string>();
-                        if (parts.Length > 7 && !string.IsNullOrEmpty(parts[7]))
+                        // Load transactions (semicolon-separated)
+                        List<string> txList = new List<string>();
+                        if (!string.IsNullOrWhiteSpace(parts[7]))
                             txList.AddRange(parts[7].Split(';'));
                         transactions.Add(txList);
 
-                        // Load hasAppointment
-                        hasAppointment.Add(parts.Length > 8 && bool.TryParse(parts[8], out bool appt) ? appt : false);
+                        // Load extra fields with safety checks
+                        hasAppointment.Add(parts.Length > 8 ? bool.Parse(parts[8]) : false);
+                        hasActiveLoan.Add(parts.Length > 9 ? bool.Parse(parts[9]) : false);
+                        loanAmounts.Add(parts.Length > 10 ? double.Parse(parts[10]) : 0);
+                        loanInterestRates.Add(parts.Length > 11 ? double.Parse(parts[11]) : 0);
+                        isLocked.Add(parts.Length > 12 ? bool.Parse(parts[12]) : false);
+                        failedLoginAttempts.Add(parts.Length > 13 ? int.Parse(parts[13]) : 0);
 
-                        // Load hasActiveLoan
-                        hasActiveLoan.Add(parts.Length > 9 && bool.TryParse(parts[9], out bool loan) ? loan : false);
-
+                        // Update lastAccountNumber
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;
                     }
@@ -772,9 +799,11 @@ namespace MiniProjectExplanation
             }
             catch
             {
-                Console.WriteLine("Error loading file.");
+                Console.WriteLine("❌ Error loading account file.");
             }
         }
+
+
 
 
 
@@ -833,20 +862,27 @@ namespace MiniProjectExplanation
             Console.WriteLine(" Your contact info has been updated.");
         }
 
+       
         static void RequestLoan()
         {
             int index = Login();
             if (index == -1) return;
 
+            // ✅ Fix: ensure lists are safe to access
+            while (hasActiveLoan.Count <= index) hasActiveLoan.Add(false);
+            while (balances.Count <= index) balances.Add(0);
+            while (loanAmounts.Count <= index) loanAmounts.Add(0);
+            while (loanInterestRates.Count <= index) loanInterestRates.Add(0);
+
             if (hasActiveLoan[index])
             {
-                Console.WriteLine("❌ You already have an active loan.");
+                Console.WriteLine(" You already have an active loan.");
                 return;
             }
 
             if (balances[index] < 5000)
             {
-                Console.WriteLine("❌ You must have at least 5000 balance to request a loan.");
+                Console.WriteLine(" You must have at least 5000 balance to request a loan.");
                 return;
             }
 
@@ -867,6 +903,7 @@ namespace MiniProjectExplanation
             loanRequests.Enqueue((index, amount, rate));
             Console.WriteLine("✅ Loan request submitted. Awaiting admin approval.");
         }
+
 
 
         static void ViewAllAccounts()
@@ -988,13 +1025,16 @@ namespace MiniProjectExplanation
                 string record = $"{DateTime.Now:yyyy-MM-dd},Loan Approved,{amount}";
                 transactions[index].Add(record);
 
-                Console.WriteLine("✅ Loan approved and amount credited.");
+                Console.WriteLine(" Loan approved and amount credited.");
             }
             else
             {
-                Console.WriteLine("❌ Loan request rejected.");
+                Console.WriteLine(" Loan request rejected.");
             }
         }
+
+
+
 
         static void LoadReviews()
         {

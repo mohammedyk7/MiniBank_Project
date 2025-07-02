@@ -603,14 +603,12 @@ namespace MiniProjectExplanation
             switch (currencyChoice)
             {
                 case "2":
-                    exchangeRate = 3.8; // 1 USD = 3.8 OMR
+                    exchangeRate = 3.8;
                     currency = "USD";
                     break;
                 case "3":
-                    exchangeRate = 4.1; // 1 EUR = 4.1 OMR
+                    exchangeRate = 4.1;
                     currency = "EUR";
-                    break;
-                default:
                     break;
             }
 
@@ -628,16 +626,19 @@ namespace MiniProjectExplanation
                 double convertedAmount = foreignAmount * exchangeRate;
                 balances[index] += convertedAmount;
 
-                string record = $"{DateTime.Now:yyyy-MM-dd},Deposit,{convertedAmount:F2} OMR (from {foreignAmount:F2} {currency})";
+                string timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                string record = $"[{timestamp}] Deposit - {foreignAmount:F2} {currency} => {convertedAmount:F2} OMR | New Balance: {balances[index]:F2}";
+
                 transactions[index].Add(record);
 
-                Console.WriteLine($"Deposit successful. {foreignAmount:F2} {currency} = {convertedAmount:F2} OMR.");
+                Console.WriteLine($"✅ Deposit successful. {foreignAmount:F2} {currency} = {convertedAmount:F2} OMR.");
             }
             catch
             {
                 Console.WriteLine("Invalid amount.");
             }
         }
+
 
 
         static void Withdraw()

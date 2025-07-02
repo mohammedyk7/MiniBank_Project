@@ -29,14 +29,16 @@ namespace MiniProjectExplanation
         static Stack<string> reviewsStack = new Stack<string>(); // Stack to store reviews and complaints
         static List<string> passwordHashes = new List<string>();// List to store hashed passwords
         static List<string> nationalIDs = new List<string>();// List to store National IDs
-        static string HashPassword(string password) //to improve security no one can see the raw password 
+        static string HashPassword(string password)
+        //to improve security no one can see the raw password
+        // takes a user's raw password as input and returns a hashed string
         {
             using (SHA256 sha256 = SHA256.Create()) //to convert password to hash
             {
-                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password)); 
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));  //256 bits character 
                 StringBuilder builder = new StringBuilder();
                 foreach (byte b in bytes)
-                    builder.Append(b.ToString("x2"));
+                    builder.Append(b.ToString("x2")); //turns something like 11101010 into "ea"
                 return builder.ToString();
             }
         }
@@ -241,7 +243,7 @@ namespace MiniProjectExplanation
             }
             else
             {
-                Console.WriteLine("❌ Access denied. Invalid credentials.");
+                Console.WriteLine("Access denied. Invalid credentials.");
                 return false;
             }
         }
@@ -277,7 +279,7 @@ namespace MiniProjectExplanation
 
                 if (!matchingAccounts.Any())
                 {
-                    Console.WriteLine("⚠️ No accounts found matching the given name.");
+                    Console.WriteLine(" No accounts found matching the given name.");
                 }
                 else
                 {
@@ -293,11 +295,11 @@ namespace MiniProjectExplanation
                     var richAccounts = balances
                         .Select((b, i) => new { acc = accountNumbers[i], name = accountNames[i], balance = b })
                         .Where(x => x.balance > min)
-                        .ToList(); // ✅ Convert to list so we can check the count
+                        .ToList(); //  Convert to list so we can check the count
 
                     if (richAccounts.Count == 0)
                     {
-                        Console.WriteLine("⚠️ No accounts found with balance above the given amount.");
+                        Console.WriteLine(" No accounts found with balance above the given amount.");
                     }
                     else
                     {

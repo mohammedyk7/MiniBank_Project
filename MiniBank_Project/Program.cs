@@ -188,7 +188,7 @@ namespace MiniProjectExplanation
         }
 
         // ========== ADMIN MENU ==========
-        static void AdminMenu()
+        static void AdminMenu() 
         {
             bool inAdminMenu = true;
 
@@ -230,12 +230,12 @@ namespace MiniProjectExplanation
                 Console.ReadKey();
             }
         }
-        static bool AdminLogin()
+        static bool AdminLogin() //admin login function
         {
-            Console.Write("Enter Admin ID: ");
+            Console.Write("Enter Admin ID: "); 
             string id = Console.ReadLine();
             Console.Write("Enter Admin Password: ");
-            string password = ReadPassword();
+            string password = ReadPassword(); //read password with hidden input
 
             if (id == AdminID && password == AdminPassword)
             {

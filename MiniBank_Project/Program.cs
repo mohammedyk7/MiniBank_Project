@@ -12,10 +12,10 @@ namespace MiniProjectExplanation
     {
         // Constants
         const double MinimumBalance = 100.0;
-        const string AccountsFilePath = "accounts.txt";
-        const string ReviewsFilePath = "reviews.txt";
-        const string AdminID = "admin";
-        const string AdminPassword = "1234";
+        const string AccountsFilePath = "accounts.txt"; // File to store account information
+        const string ReviewsFilePath = "reviews.txt"; // File to store reviews and complaints
+        const string AdminID = "admin"; // Admin ID for login
+        const string AdminPassword = "1234"; // Admin password for login
 
 
         // Global lists (parallel)
@@ -25,7 +25,7 @@ namespace MiniProjectExplanation
         //static List<Queue<string>> transactions = new List<Queue<string>>();
         // Queues and Stacks
         //static Queue<(string name, string nationalID)> createAccountRequests = new Queue<(string, string)>();
-        static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID"
+        static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID" //for pending requestsss
         static Stack<string> reviewsStack = new Stack<string>();
         static List<string> passwordHashes = new List<string>();
         static List<string> nationalIDs = new List<string>();
@@ -810,7 +810,7 @@ namespace MiniProjectExplanation
         // ===== Monthly Statement Generation =====
         static void GenerateMonthlyStatement()
         {
-            int index = Login();
+            int index = Login(); //fix: ensure index is valid
             if (index == -1) return;
 
             Console.Write("Enter year (e.g., 2025): ");
@@ -818,7 +818,7 @@ namespace MiniProjectExplanation
             Console.Write("Enter month (1-12): ");
             if (!int.TryParse(Console.ReadLine(), out int month)) return;
 
-            var txs = transactions[index]
+            var txs = transactions[index] //ensure transactions are valid
                 .Select(tx => tx.Split(','))
                 .Where(parts => DateTime.TryParse(parts[0], out DateTime dt) && dt.Year == year && dt.Month == month)
                 .ToList();
@@ -834,7 +834,7 @@ namespace MiniProjectExplanation
             {
                 writer.WriteLine($"Statement for Account: {accountNumbers[index]} ({accountNames[index]})");
                 writer.WriteLine($"Period: {year}-{month:D2}");
-                writer.WriteLine("Date        | Type     | Amount");
+                writer.WriteLine("Date        | Type     | Amount"); //design the header
                 writer.WriteLine("-------------------------------");
                 foreach (var tx in txs)
                     writer.WriteLine($"{tx[0],-11} | {tx[1],-8} | {tx[2]}");
@@ -868,7 +868,7 @@ namespace MiniProjectExplanation
             int index = Login();
             if (index == -1) return;
 
-            // ✅ Fix: ensure lists are safe to access
+            // Fix: ensure lists are safe to access
             while (hasActiveLoan.Count <= index) hasActiveLoan.Add(false);
             while (balances.Count <= index) balances.Add(0);
             while (loanAmounts.Count <= index) loanAmounts.Add(0);
@@ -901,7 +901,7 @@ namespace MiniProjectExplanation
             }
 
             loanRequests.Enqueue((index, amount, rate));
-            Console.WriteLine("✅ Loan request submitted. Awaiting admin approval.");
+            Console.WriteLine(" Loan request submitted. Awaiting admin approval."); //
         }
 
 

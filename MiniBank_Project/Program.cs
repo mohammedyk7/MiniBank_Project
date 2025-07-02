@@ -686,6 +686,7 @@ namespace MiniProjectExplanation
             Console.WriteLine($"Holder Name: {accountNames[index]}");
             Console.WriteLine($"Current Balance: {balances[index]}");
         }
+        
         static void SaveAccountsInformationToFile()
         {
             try
@@ -694,17 +695,13 @@ namespace MiniProjectExplanation
                 {
                     for (int i = 0; i < accountNumbers.Count; i++)
                     {
-                        // Sanitize text fields to avoid breaking CSV structure
                         string safeName = accountNames[i].Replace(',', ' ');
                         string safePhone = phoneNumbers[i].Replace(',', ' ');
                         string safeAddress = addresses[i].Replace(',', ' ');
 
-                        // Join all transactions using semicolon
                         string tx = string.Join(";", transactions[i]);
 
-                        // Write all fields including appointment, lock status, and login attempts
-                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{isLocked[i]},{failedLoginAttempts[i]}";
-
+                        string dataLine = $"{accountNumbers[i]},{safeName},{balances[i]},{passwordHashes[i]},{nationalIDs[i]},{safePhone},{safeAddress},{tx},{hasAppointment[i]},{hasActiveLoan[i]}";
                         writer.WriteLine(dataLine);
                     }
                 }
@@ -715,6 +712,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error saving file.");
             }
         }
+
 
 
         static void LoadAccountsInformationFromFile()
@@ -736,8 +734,7 @@ namespace MiniProjectExplanation
                 phoneNumbers.Clear();
                 addresses.Clear();
                 hasAppointment.Clear();
-                isLocked.Clear();                // <-- New
-                failedLoginAttempts.Clear();     // <-- New
+                hasActiveLoan.Clear();
 
                 using (StreamReader reader = new StreamReader(AccountsFilePath))
                 {
@@ -745,6 +742,7 @@ namespace MiniProjectExplanation
                     while ((line = reader.ReadLine()) != null)
                     {
                         string[] parts = line.Split(',');
+
                         int accNum = Convert.ToInt32(parts[0]);
                         accountNumbers.Add(accNum);
                         accountNames.Add(parts[1]);
@@ -759,14 +757,11 @@ namespace MiniProjectExplanation
                             txList.AddRange(parts[7].Split(';'));
                         transactions.Add(txList);
 
-                        hasAppointment.Add(false); // default for now
+                        // Load hasAppointment
+                        hasAppointment.Add(parts.Length > 8 && bool.TryParse(parts[8], out bool appt) ? appt : false);
 
-                        // Safe load of isLocked and failedLoginAttempts
-                        bool locked = parts.Length > 8 && bool.TryParse(parts[8], out bool parsedLock) ? parsedLock : false;
-                        int attempts = parts.Length > 9 && int.TryParse(parts[9], out int parsedAttempts) ? parsedAttempts : 0;
-
-                        isLocked.Add(locked);
-                        failedLoginAttempts.Add(attempts);
+                        // Load hasActiveLoan
+                        hasActiveLoan.Add(parts.Length > 9 && bool.TryParse(parts[9], out bool loan) ? loan : false);
 
                         if (accNum > lastAccountNumber)
                             lastAccountNumber = accNum;
@@ -780,6 +775,7 @@ namespace MiniProjectExplanation
                 Console.WriteLine("Error loading file.");
             }
         }
+
 
 
         // ===== Monthly Statement Generation =====

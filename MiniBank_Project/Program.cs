@@ -26,9 +26,9 @@ namespace MiniProjectExplanation
         // Queues and Stacks
         //static Queue<(string name, string nationalID)> createAccountRequests = new Queue<(string, string)>();
         static Queue<string> createAccountRequests = new Queue<string>(); // format: "Name|NationalID" //for pending requestsss
-        static Stack<string> reviewsStack = new Stack<string>();
-        static List<string> passwordHashes = new List<string>();
-        static List<string> nationalIDs = new List<string>();
+        static Stack<string> reviewsStack = new Stack<string>(); // Stack to store reviews and complaints
+        static List<string> passwordHashes = new List<string>();// List to store hashed passwords
+        static List<string> nationalIDs = new List<string>();// List to store National IDs
         static string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())

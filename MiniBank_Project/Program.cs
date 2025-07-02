@@ -261,9 +261,9 @@ namespace MiniProjectExplanation
             if (choice == "1")
             {
                 //query creation 
-                var sorted = accountNumbers //
-                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] })
-                    .OrderByDescending(x => x.balance);
+                var sorted = accountNumbers 
+                    .Select((acc, i) => new { acc, name = accountNames[i], balance = balances[i] }) //acc=account number , i=current element 
+                    .OrderByDescending(x => x.balance); //if we want ascending order we can use OrderBy instead of OrderByDescending
 
                 foreach (var x in sorted)
                     Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
@@ -304,7 +304,7 @@ namespace MiniProjectExplanation
                     else
                     {
                         foreach (var x in richAccounts)
-                            Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}");
+                            Console.WriteLine($"Acc#: {x.acc}, Name: {x.name}, Balance: {x.balance:F2}"); // account number, name, and balance
                     }
                 }
                 else

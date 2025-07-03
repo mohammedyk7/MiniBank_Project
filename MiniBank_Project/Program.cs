@@ -647,7 +647,7 @@ namespace MiniProjectExplanation
 
                 transactions[index].Add(record);
 
-                Console.WriteLine($"✅ Deposit successful. {foreignAmount:F2} {currency} = {convertedAmount:F2} OMR.");
+                Console.WriteLine($" Deposit successful. {foreignAmount:F2} {currency} = {convertedAmount:F2} OMR.");
             }
             catch
             {
